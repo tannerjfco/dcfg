@@ -45,3 +45,7 @@ or
 dcfg run install
 dcfg run uninstall
 ```
+or
+```
+dcfg run install uninstall
+```

@@ -10,6 +10,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func inArgs(needle string, args []string) bool {
+	for _, arg := range args {
+		if arg == needle {
+			return true
+		}
+	}
+	return false
+}
+
 // runCmd represents the run command
 var runCmd = &cobra.Command{
 	Use:   "run [group_name|all]",
@@ -29,7 +38,7 @@ var runCmd = &cobra.Command{
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Running", args[0], "...")
+		fmt.Println("Running", args, "...")
 
 		fileBytes, err := ioutil.ReadFile(cfgFile)
 		if err != nil {
@@ -42,7 +51,7 @@ var runCmd = &cobra.Command{
 		}
 
 		for _, group := range groups {
-			if args[0] == "all" || args[0] == group.Name {
+			if args[0] == "all" || inArgs(group.Name, args) {
 				group.Run()
 			}
 		}
