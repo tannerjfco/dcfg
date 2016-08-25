@@ -11,6 +11,7 @@ Create a Config Set (drud.yaml).
 - name: install
   env:
     site_name: MangoTango
+    git_token: $GITHUB_TOKEN
   tasks:
   - cmd: echo "{{.site_name}}"
     wait: 1s
@@ -23,7 +24,7 @@ Create a Config Set (drud.yaml).
     cmd: touch newfile.txt
   - name: look
     cmd: ls -l testing
-  - name: echo "woot"
+  - name: echo "{{.git_token}}"
 
 - name: uninstall
   tasks:
