@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"text/template"
 	"time"
 )
@@ -36,6 +37,12 @@ func (g *ConfigGroup) Run() error {
 		workDir, _ = filepath.Abs(g.Workdir)
 	}
 	maybeChdir(workDir)
+
+	for k, v := range g.Env {
+		if strings.HasPrefix(v, "$") && v == strings.ToUpper(v) {
+			g.Env[k] = os.Getenv(v[1:])
+		}
+	}
 
 	fmt.Println("-", g.Name)
 	for i, t := range g.Tasks {
