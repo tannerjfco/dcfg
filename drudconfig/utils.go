@@ -45,3 +45,13 @@ func maybeChdir(d string) {
 		}
 	}
 }
+
+// HasVars takes a guess at whether there are vars in the command string
+func HasVars(command string) bool {
+	if varStart := strings.Index(command, "{{"); varStart > -1 {
+		if strings.Index(command[varStart:], "}}") > -1 {
+			return true
+		}
+	}
+	return false
+}

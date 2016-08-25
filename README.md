@@ -9,8 +9,10 @@ Create a Config Set (drud.yaml).
 
 ```
 - name: install
+  env:
+    site_name: MangoTango
   tasks:
-  - cmd: echo "testing this thing"
+  - cmd: echo "{{.site_name}}"
     wait: 1s
     repeat: 3
   - name: create directory

@@ -1,9 +1,11 @@
 package drudconfig
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"path/filepath"
+	"text/template"
 	"time"
 )
 
@@ -50,6 +52,15 @@ func (g *ConfigGroup) Run() error {
 				time.Sleep(lengthOfWait)
 			}
 
+			if HasVars(t.Cmd) {
+				var doc bytes.Buffer
+				templ := template.New("cmd template")
+				templ, _ = templ.Parse(t.Cmd)
+				templ.Execute(&doc, g.Env)
+				t.Cmd = doc.String()
+				fmt.Println(t.Cmd)
+			}
+
 			err := RunCommand(t.Cmd)
 			if err != nil {
 				if !t.Ignore {
@@ -63,5 +74,6 @@ func (g *ConfigGroup) Run() error {
 	}
 
 	os.Chdir(baseDir)
+
 	return nil
 }
