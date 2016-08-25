@@ -3,6 +3,8 @@ package drudconfig
 import (
 	"bytes"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -17,12 +19,15 @@ type ConfigGroup struct {
 	User    string            `yaml:"user"`
 	Workdir string            `yaml:"workdir"`
 	Tasks   []struct {
-		Name    string `yaml:"name"`
-		Cmd     string `yaml:"cmd"`
-		Workdir string `yaml:"workdir"`
-		Wait    string `yaml:"wait"`
-		Repeat  int    `yaml:"repeat"`
-		Ignore  bool   `yaml:"ignore"`
+		Name    string      `yaml:"name"`
+		Cmd     string      `yaml:"cmd"`
+		Write   string      `yaml:"write"`
+		Dest    string      `yaml:"dest"`
+		Mode    os.FileMode `yaml:"mode"`
+		Workdir string      `yaml:"workdir"`
+		Wait    string      `yaml:"wait"`
+		Repeat  int         `yaml:"repeat"`
+		Ignore  bool        `yaml:"ignore"`
 	} `json:"tasks"`
 }
 
@@ -59,21 +64,44 @@ func (g *ConfigGroup) Run() error {
 				time.Sleep(lengthOfWait)
 			}
 
-			if HasVars(t.Cmd) {
-				var doc bytes.Buffer
-				templ := template.New("cmd template")
-				templ, _ = templ.Parse(t.Cmd)
-				templ.Execute(&doc, g.Env)
-				t.Cmd = doc.String()
-				fmt.Println(t.Cmd)
+			taskPayload := ""
+			if t.Cmd != "" {
+				taskPayload = t.Cmd
+			} else if t.Write != "" {
+				taskPayload = t.Write
 			}
 
-			err := RunCommand(t.Cmd)
-			if err != nil {
-				if !t.Ignore {
-					return err
+			if HasVars(taskPayload) {
+				var doc bytes.Buffer
+				templ := template.New("cmd template")
+				templ, _ = templ.Parse(taskPayload)
+				templ.Execute(&doc, g.Env)
+				taskPayload = doc.String()
+			}
+
+			if t.Cmd != "" {
+				err := RunCommand(taskPayload)
+				if err != nil {
+					if !t.Ignore {
+						return err
+					}
+				}
+			} else if t.Write != "" {
+
+				err := ioutil.WriteFile(t.Dest, []byte(taskPayload), t.Mode)
+				if err != nil {
+					log.Fatalln("Could not read config file:", err)
+				}
+
+				info, _ := os.Stat(t.Dest)
+				if info.Mode() != t.Mode {
+					err := os.Chmod(t.Dest, t.Mode)
+					if err != nil {
+						log.Fatalln(err)
+					}
 				}
 			}
+
 		}
 
 		maybeChdir(workDir)

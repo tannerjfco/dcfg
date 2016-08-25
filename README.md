@@ -22,6 +22,14 @@ Create a Config Set (drud.yaml).
   - name: make file in new directory
     workdir: testing
     cmd: touch newfile.txt
+  - name: make content
+    workdir: testing
+    write: |
+        what what what
+        what what {{.git_token}}
+        whathwat
+    dest: newfile.txt
+    mode: 0777
   - name: look
     cmd: ls -l testing
   - name: echo "{{.git_token}}"
