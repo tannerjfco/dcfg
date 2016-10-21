@@ -1,18 +1,26 @@
 package drudconfig
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
 	"strings"
 
-	"gopkg.in/yaml.v2"
+	"github.com/ghodss/yaml"
 )
 
 // GetConfigGroups unmarshalls config groups from the config file into structs
 func GetConfigGroups(confByte []byte) (GroupSet, error) {
 	var groups GroupSet
-	err := yaml.Unmarshal(confByte, &groups)
+	jbytes, err := yaml.YAMLToJSON(confByte)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(string(jbytes))
+
+	err = json.Unmarshal(jbytes, &groups)
 	if err != nil {
 		return nil, err
 	}

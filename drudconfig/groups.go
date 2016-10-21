@@ -2,37 +2,23 @@ package drudconfig
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"html/template"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
-	"text/template"
-	"time"
 )
 
 // ConfigGroup models the config group from the drud.yaml
 type ConfigGroup struct {
-	Name    string            `yaml:"name"`
-	Env     map[string]string `yaml:"env"`
-	User    string            `yaml:"user"`
-	Workdir string            `yaml:"workdir"`
-	Tasks   []struct {
-		Name    string      `yaml:"name"`
-		Cmd     string      `yaml:"cmd"`
-		Write   string      `yaml:"write"`
-		Dest    string      `yaml:"dest"`
-		Mode    os.FileMode `yaml:"mode"`
-		Workdir string      `yaml:"workdir"`
-		Wait    string      `yaml:"wait"`
-		Repeat  int         `yaml:"repeat"`
-		Ignore  bool        `yaml:"ignore"`
-	} `json:"tasks"`
+	Name    string             `yaml:"name",json:"name"`
+	Env     map[string]string  `yaml:"env",json:"env"`
+	User    string             `yaml:"user",json:"user"`
+	Workdir string             `yaml:"workdir",json:"workdir"`
+	Tasks   []*json.RawMessage `json:"tasks",yaml:"tasks"`
 }
-
-// GroupSet represents a lsit of ConfigGroups
-type GroupSet []ConfigGroup
 
 // Run does its best to execute the cmd defined by the user
 func (g *ConfigGroup) Run() error {
@@ -49,66 +35,53 @@ func (g *ConfigGroup) Run() error {
 		}
 	}
 
-	fmt.Println("-", g.Name)
-	for i, t := range g.Tasks {
+	fmt.Println("Runnign group:", g.Name)
+	//fmt.Println(string(g.Tasks))
 
-		if t.Name != "" {
-			fmt.Println(i, t.Name)
+	for _, t := range g.Tasks {
+		taskString := string([]byte(*t))
+		if HasVars(taskString) {
+			var doc bytes.Buffer
+			templ := template.New("cmd template")
+			templ, _ = templ.Parse(taskString)
+			templ.Execute(&doc, g.Env)
+			taskString = doc.String()
 		}
 
-		maybeChdir(t.Workdir)
-		for c := t.Repeat; c >= 0; c-- {
-
-			if t.Wait != "" {
-				lengthOfWait, _ := time.ParseDuration(t.Wait)
-				time.Sleep(lengthOfWait)
-			}
-
-			taskPayload := ""
-			if t.Cmd != "" {
-				taskPayload = t.Cmd
-			} else if t.Write != "" {
-				taskPayload = t.Write
-			}
-
-			if HasVars(taskPayload) {
-				var doc bytes.Buffer
-				templ := template.New("cmd template")
-				templ, _ = templ.Parse(taskPayload)
-				templ.Execute(&doc, g.Env)
-				taskPayload = doc.String()
-			}
-
-			if t.Cmd != "" {
-				err := RunCommand(taskPayload)
-				if err != nil {
-					if !t.Ignore {
-						return err
-					}
-				}
-			} else if t.Write != "" {
-
-				err := ioutil.WriteFile(t.Dest, []byte(taskPayload), t.Mode)
-				if err != nil {
-					log.Fatalln("Could not read config file:", err)
-				}
-
-				info, _ := os.Stat(t.Dest)
-				if info.Mode() != t.Mode {
-					err := os.Chmod(t.Dest, t.Mode)
-					if err != nil {
-						log.Fatalln(err)
-					}
-				}
-			}
-
+		var cmdType TaskType
+		err := json.Unmarshal([]byte(taskString), &cmdType)
+		if err != nil {
+			fmt.Println(err)
 		}
 
-		maybeChdir(workDir)
-		fmt.Println("---")
+		var action Action
+		switch cmdType.Action {
+		case "command":
+			var cmd Command
+			err = json.Unmarshal([]byte(taskString), &cmd)
+			if err != nil {
+				fmt.Println(err)
+			}
+			action = cmd
+		case "write":
+			var w Write
+			err = json.Unmarshal([]byte(taskString), &w)
+			if err != nil {
+				fmt.Println(err)
+			}
+			action = w
+		default:
+			log.Fatalf("unknown command type: %q", cmdType.Action)
+		}
+
+		action.Pretty()
+
 	}
 
 	os.Chdir(baseDir)
 
 	return nil
 }
+
+// GroupSet represents a lsit of ConfigGroups
+type GroupSet []ConfigGroup
