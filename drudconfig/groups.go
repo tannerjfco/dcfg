@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -36,7 +35,6 @@ func (g *ConfigGroup) Run() error {
 	}
 
 	fmt.Println("Runnign group:", g.Name)
-	//fmt.Println(string(g.Tasks))
 
 	for _, t := range g.Tasks {
 		taskString := string([]byte(*t))
@@ -54,24 +52,10 @@ func (g *ConfigGroup) Run() error {
 			fmt.Println(err)
 		}
 
-		var action Action
-		switch cmdType.Action {
-		case "command":
-			var cmd Command
-			err = json.Unmarshal([]byte(taskString), &cmd)
-			if err != nil {
-				fmt.Println(err)
-			}
-			action = cmd
-		case "write":
-			var w Write
-			err = json.Unmarshal([]byte(taskString), &w)
-			if err != nil {
-				fmt.Println(err)
-			}
-			action = w
-		default:
-			log.Fatalf("unknown command type: %q", cmdType.Action)
+		action := TypeMap[cmdType.Action]
+		err = json.Unmarshal([]byte(taskString), &action)
+		if err != nil {
+			fmt.Println(err)
 		}
 
 		action.Pretty()

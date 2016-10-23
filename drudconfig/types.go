@@ -5,6 +5,11 @@ type Action interface {
 	Pretty()
 }
 
+var TypeMap = map[string]Action{
+	"command": &Command{},
+	"write":   &Write{},
+}
+
 type Task struct {
 	Name    string `yaml:"name"`    // name of the task
 	Dest    string `yaml:"dest"`    // what this action will be performed on
