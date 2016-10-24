@@ -34,4 +34,5 @@ type TaskType struct {
 var TypeMap = map[string]Task{
 	"command": &Command{},
 	"write":   &Write{},
+	"replace": &Replace{},
 }
