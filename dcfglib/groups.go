@@ -1,3 +1,4 @@
+// The TaskSet
 package dcfglib
 
 import (
@@ -13,7 +14,7 @@ import (
 )
 
 // ConfigGroup models the config group from the drud.yaml
-type ConfigGroup struct {
+type TaskSet struct {
 	Name    string             `yaml:"name",json:"name"`
 	Env     map[string]string  `yaml:"env",json:"env"`
 	User    string             `yaml:"user",json:"user"`
@@ -22,7 +23,7 @@ type ConfigGroup struct {
 }
 
 // Run does its best to execute the cmd defined by the user
-func (g *ConfigGroup) Run() error {
+func (g *TaskSet) Run() error {
 	baseDir, _ := os.Getwd()
 	var workDir string
 	if g.Workdir != "" {
@@ -69,5 +70,5 @@ func (g *ConfigGroup) Run() error {
 	return nil
 }
 
-// GroupSet represents a lsit of ConfigGroups
-type GroupSet []ConfigGroup
+// TaskSetList represents a lsit of TaskSets
+type TaskSetList []TaskSet
