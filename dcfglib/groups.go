@@ -1,4 +1,4 @@
-package drudconfig
+package dcfglib
 
 import (
 	"bytes"
@@ -8,6 +8,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/drud/dcfg/plugins"
 )
 
 // ConfigGroup models the config group from the drud.yaml
@@ -34,7 +36,7 @@ func (g *ConfigGroup) Run() error {
 		}
 	}
 
-	fmt.Println("Runnign group:", g.Name)
+	fmt.Println("Running group:", g.Name)
 
 	for _, t := range g.Tasks {
 		taskString := string([]byte(*t))
@@ -46,13 +48,13 @@ func (g *ConfigGroup) Run() error {
 			taskString = doc.String()
 		}
 
-		var cmdType TaskType
+		var cmdType plugins.TaskType
 		err := json.Unmarshal([]byte(taskString), &cmdType)
 		if err != nil {
 			fmt.Println(err)
 		}
 
-		action := TypeMap[cmdType.Action]
+		action := plugins.TypeMap[cmdType.Action]
 		err = json.Unmarshal([]byte(taskString), &action)
 		if err != nil {
 			fmt.Println(err)

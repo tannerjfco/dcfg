@@ -1,7 +1,8 @@
-package drudconfig
+package plugins
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/drud/drud-go/utils"
@@ -10,10 +11,6 @@ import (
 type Command struct {
 	Task
 	Cmd string `yaml:"cmd"`
-}
-
-func (c Command) GetPayload() string {
-	return "fudge"
 }
 
 func (c Command) Pretty() {
@@ -34,7 +31,9 @@ func (c *Command) Run() error {
 			return fmt.Errorf("No cmd specified")
 		}
 
-		err := RunCommand(taskPayload)
+		parts := strings.Split(taskPayload, " ")
+
+		err := utils.RunCommandPipe(parts[0], parts[1:])
 		if err != nil {
 			if !c.Ignore {
 				return err

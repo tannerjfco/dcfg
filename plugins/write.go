@@ -1,4 +1,4 @@
-package drudconfig
+package plugins
 
 import (
 	"fmt"
@@ -14,10 +14,6 @@ type Write struct {
 	Task
 	Write string      `yaml:"write"`
 	Mode  os.FileMode `yaml:"mode",json:"write"`
-}
-
-func (w Write) GetPayload() string {
-	return "fudge"
 }
 
 func (w Write) Pretty() {

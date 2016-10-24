@@ -1,13 +1,7 @@
-package drudconfig
+package plugins
 
 type Action interface {
-	GetPayload() string
 	Pretty()
-}
-
-var TypeMap = map[string]Action{
-	"command": &Command{},
-	"write":   &Write{},
 }
 
 type Task struct {
@@ -21,4 +15,9 @@ type Task struct {
 
 type TaskType struct {
 	Action string `yaml:"action"` // which action is being called
+}
+
+var TypeMap = map[string]Action{
+	"command": &Command{},
+	"write":   &Write{},
 }

@@ -1,4 +1,4 @@
-package drudconfig
+package dcfglib
 
 import (
 	"encoding/json"

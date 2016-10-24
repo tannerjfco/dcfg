@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	dcfg "github.com/drud/dcfg/drudconfig"
+	dcfg "github.com/drud/dcfg/dcfglib"
 	"github.com/spf13/cobra"
 )
 
