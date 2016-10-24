@@ -1,1 +1,5 @@
-dcfg.yaml
+dcfg
+dcfg-darwin
+dcfg-linux
+drud.yaml
+testing/dcfg.yaml

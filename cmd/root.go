@@ -29,7 +29,7 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "dcfg.yaml", "config file (default is ./dcfg.yaml)")
+	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "drud.yaml", "config file (default is ./drud.yaml)")
 
 }
 
