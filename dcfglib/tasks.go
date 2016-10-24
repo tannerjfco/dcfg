@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -75,7 +76,10 @@ func (g *TaskSet) Run() error {
 		}
 
 		fmt.Println(action)
-		//err = action.Run()
+		err = action.Run()
+		if err != nil {
+			log.Fatal(err)
+		}
 
 	}
 
