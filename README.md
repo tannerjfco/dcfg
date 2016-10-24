@@ -5,7 +5,7 @@ A cli for configuration management.
 
 Get the binary. Either build the source or head to the releases section.
 
-Create a Task Set (drud.yaml).
+### Create a Task Set (drud.yaml).
 
 Each of the outer most list items in the drud.yaml file are Task Sets. The file can container one Task Set or multiple.
 Each Task Set can be run on its own or with other Tas Sets in the file.
@@ -17,7 +17,8 @@ dcfg run uninstall
 dcfg run install uninstall
 ```
 
-The Attributes available to the Task Set are:
+
+#### The Attributes available to the Task Set are:
 
 -	name
 
@@ -41,7 +42,7 @@ The Attributes available to the Task Set are:
    A list of task objects taht define what this Task Set does when executed.
 
 
-A task can contain these default attributes:
+#### A task can contain these default attributes:
 
 
  -	name  
@@ -68,7 +69,8 @@ A task can contain these default attributes:
 
   ignore failures or not
 
-The type of a task is defined by the `action` field.
+
+##### The type of a task is defined by the `action` field.
 
 This field's value is defined by eash plugin which imlpementes its own action.
 For instance, the two currently existing plugins implement these actions:
@@ -80,6 +82,11 @@ For instance, the two currently existing plugins implement these actions:
  - write
 
    Writes a string or text block to file. Can use env vars.
+
+ - Replace
+
+    Replace a string with another in a file. Works with regex.
+
 
 These actions when defined in the drud.yaml look like this:
 
@@ -105,7 +112,20 @@ write:
     mode: 0777
 ```
 
-Full drud.yaml example:
+replace:
+
+given a file named turtle.txt that contains `name: bob` and you want to replace `bob` with `james`
+
+```
+  - name: replace name
+    action: replace
+    find: "(name:) ([a-z]*)"
+    replace: "$1 james"
+    dest: turtle.txt
+```
+
+
+##### Full drud.yaml example:
 
 ```
 - name: install
