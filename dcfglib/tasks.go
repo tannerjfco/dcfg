@@ -1,4 +1,5 @@
-// The TaskSet
+// Package dcfglib groups.go - The TaskSet and TaskSetList types represent the blocks of commands
+// contained in your drud.yaml(e.g. the install and uninstall examples from the readne).
 package dcfglib
 
 import (
@@ -13,7 +14,7 @@ import (
 	"github.com/drud/dcfg/plugins"
 )
 
-// ConfigGroup models the config group from the drud.yaml
+// TaskSet models the outermost list item in the drud.yaml file
 type TaskSet struct {
 	Name    string             `yaml:"name",json:"name"`
 	Env     map[string]string  `yaml:"env",json:"env"`
@@ -22,7 +23,10 @@ type TaskSet struct {
 	Tasks   []*json.RawMessage `json:"tasks",yaml:"tasks"`
 }
 
-// Run does its best to execute the cmd defined by the user
+// Run will move to any directory specified by Workdir, switch to the User if specified then
+// loop through the Tasks replacing templating vars with values from the Env map. It then determines
+// which implementation of the plugins.Action interface to use for each task. After that it
+// calls the Run method on the individual tasks.
 func (g *TaskSet) Run() error {
 	baseDir, _ := os.Getwd()
 	var workDir string
@@ -31,6 +35,8 @@ func (g *TaskSet) Run() error {
 	}
 	maybeChdir(workDir)
 
+	// uppercase env values that start with $ are assumed to be referencing
+	// environment variables in the host
 	for k, v := range g.Env {
 		if strings.HasPrefix(v, "$") && v == strings.ToUpper(v) {
 			g.Env[k] = os.Getenv(v[1:])
@@ -41,6 +47,9 @@ func (g *TaskSet) Run() error {
 
 	for _, t := range g.Tasks {
 		taskString := string([]byte(*t))
+
+		// Determine if there are tempalte strings in the task and replace then with values
+		// from the TaskSet.Env map
 		if HasVars(taskString) {
 			var doc bytes.Buffer
 			templ := template.New("cmd template")
@@ -49,19 +58,24 @@ func (g *TaskSet) Run() error {
 			taskString = doc.String()
 		}
 
+		// first Unmarshal into the TaskType so we can use the Action field to determine which plugin
+		// to implement for the given task
 		var cmdType plugins.TaskType
 		err := json.Unmarshal([]byte(taskString), &cmdType)
 		if err != nil {
 			fmt.Println(err)
 		}
 
+		// each plugin is registed in the plugins.TypeMap which will use the action string
+		// as the index in order to get the plugin it is mapped to
 		action := plugins.TypeMap[cmdType.Action]
 		err = json.Unmarshal([]byte(taskString), &action)
 		if err != nil {
 			fmt.Println(err)
 		}
 
-		action.Pretty()
+		fmt.Println(action)
+		//err = action.Run()
 
 	}
 

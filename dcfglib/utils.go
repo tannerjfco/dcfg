@@ -10,14 +10,13 @@ import (
 	"github.com/ghodss/yaml"
 )
 
-// GetConfigGroups unmarshalls config groups from the config file into structs
-func GetConfigGroups(confByte []byte) (TaskSetList, error) {
+// GetTaskSetList unmarshalls config groups from the config file into structs
+func GetTaskSetList(confByte []byte) (TaskSetList, error) {
 	var groups TaskSetList
 	jbytes, err := yaml.YAMLToJSON(confByte)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(string(jbytes))
 
 	err = json.Unmarshal(jbytes, &groups)
 	if err != nil {

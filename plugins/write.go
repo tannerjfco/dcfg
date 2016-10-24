@@ -10,16 +10,18 @@ import (
 	"github.com/drud/drud-go/utils"
 )
 
+// Write imlpements the Write Action
 type Write struct {
-	Task
+	TaskDefaults
 	Write string      `yaml:"write"`
 	Mode  os.FileMode `yaml:"mode",json:"write"`
 }
 
-func (w Write) Pretty() {
-	fmt.Println(utils.Prettify(w))
+func (w Write) String() string {
+	return utils.Prettify(w)
 }
 
+// Run uses the data stored in the Write struct to execute the Write command
 func (w *Write) Run() error {
 
 	if w.Wait != "" {

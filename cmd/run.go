@@ -45,7 +45,7 @@ var runCmd = &cobra.Command{
 			log.Fatalln("Could not read config file:", err)
 		}
 
-		groups, err := dcfg.GetConfigGroups(fileBytes)
+		groups, err := dcfg.GetTaskSetList(fileBytes)
 		if err != nil {
 			log.Fatalln(err)
 		}

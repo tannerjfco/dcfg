@@ -9,14 +9,15 @@ import (
 )
 
 type Command struct {
-	Task
+	TaskDefaults
 	Cmd string `yaml:"cmd"`
 }
 
-func (c Command) Pretty() {
-	fmt.Println(utils.Prettify(c))
+func (c Command) String() string {
+	return utils.Prettify(c)
 }
 
+// Run executes the command task
 func (c *Command) Run() error {
 
 	for i := c.Repeat; i >= 0; i-- {
