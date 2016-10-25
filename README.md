@@ -21,41 +21,51 @@ dcfg run install uninstall
 #### The Attributes available to the Task Set are:
 
   -	name
+  
        A descriptor that will be used to call this Task Set
 
   -	env
-      A list of key => value paris that can be templated into the values of tasks. env values that are uppercase
-      and start with a `$` wo;; be replaced with values from env vars on teh host.
+
+       A list of key => value paris that can be templated into the values of tasks. env values that are uppercase
+       and start with a `$` wo;; be replaced with values from env vars on teh host.
 
   -	user (not implemented yet)
-      Will allow you to set the user the Task Set shoudl be run as.
+
+       Will allow you to set the user the Task Set shoudl be run as.
 
   -	workdir
-      Allows you to run the entire Task Set from a specified directory.
+
+       Allows you to run the entire Task Set from a specified directory.
 
   -	tasks
-      A list of task objects taht define what this Task Set does when executed.
+
+       A list of task objects taht define what this Task Set does when executed.
 
 
 #### A task can contain these default attributes:
 
-
   -	name  
+
        name of the task
 
   -	dest  
+
        what this action will be performed on
 
   -	workdir
+
        where this action will be called from
 
   -	wait
+
        how long to wait before this action is called
 
   -	repeat 
+
        how many times to run this action
 
   -	ignore
+
        ignore failures or not
 
 
