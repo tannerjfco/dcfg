@@ -13,7 +13,7 @@ func TestConfigCreate(t *testing.T) {
 	assert := assert.New(t)
 
 	task := Config{
-		Delim: "=",
+		Delim: " = ",
 		Items: map[string]string{
 			"name":  "configuration",
 			"count": "10",
@@ -39,12 +39,12 @@ func TestConfigReplace(t *testing.T) {
 
 	assert := assert.New(t)
 
-	initialCfg := "count = v"
+	initialCfg := "count = v\n"
 	err := ioutil.WriteFile("newconfig2.conf", []byte(initialCfg), os.FileMode(0774))
 	assert.Nil(err)
 
 	task := Config{
-		Delim: "=",
+		Delim: " = ",
 		Items: map[string]string{
 			"name":  "configuration",
 			"count": "10",

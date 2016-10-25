@@ -42,12 +42,12 @@ func (c *Config) Run() error {
 	}
 
 	for k, v := range c.Items {
-		entry := fmt.Sprintf("%s %s %s\n", k, c.Delim, v)
-		if !strings.Contains(string(confFile), entry) {
+		entry := strings.Join([]string{k, v + "\n"}, c.Delim)
+		if !strings.Contains(string(confFile), entry) && !strings.Contains(string(confFile), k+c.Delim) {
 			confFile = append(confFile, entry...)
-		} else if strings.Contains(string(confFile), fmt.Sprintf("%s %s", k, c.Delim)) {
-			re := regexp.MustCompile(fmt.Sprintf("(%s %s) (.*)", k, c.Delim))
-			newContent := re.ReplaceAllString(string(confFile), "$1 "+v)
+		} else if strings.Contains(string(confFile), k+c.Delim) {
+			re := regexp.MustCompile(fmt.Sprintf("(%s%s)(.*)", k, c.Delim))
+			newContent := re.ReplaceAllString(string(confFile), "${1}"+v)
 			confFile = []byte(newContent)
 		}
 	}

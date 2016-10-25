@@ -21,7 +21,7 @@ dcfg run install uninstall
 #### The Attributes available to the Task Set are:
 
   -	name
-  
+
        A descriptor that will be used to call this Task Set
 
   -	env
@@ -86,6 +86,7 @@ For instance, the four currently existing plugins implement these actions:
   - config
        Add or change values in a config file
 
+
 These actions when defined in the drud.yaml look like this:
 
 ###### command:
@@ -127,11 +128,11 @@ given a file named turtle.txt that contains `name: bob` and you want to replace 
 ```
   - name: config file
     action: config
-    delim: :"
+    delim: ": "
     items:
-      name: configuration
-      count: 10
-      debug: true
+      name: "configuration"
+      count: "10"
+      debug: "true"
     dest: turtle.conf
 ```
 
