@@ -20,77 +20,76 @@ dcfg run install uninstall
 
 #### The Attributes available to the Task Set are:
 
--	name
+  -	name
 
-   A descriptor that will be used to call this Task Set
+       A descriptor that will be used to call this Task Set
 
--	env
+  -	env
 
-   A list of key => value paris that can be templated into the values of tasks. env values that are uppercase
-   and start with a `$` wo;; be replaced with values from env vars on teh host.
+       A list of key => value paris that can be templated into the values of tasks. env values that are uppercase
+       and start with a `$` wo;; be replaced with values from env vars on teh host.
 
--	user (not implemented yet)
+  -	user (not implemented yet)
 
-   Will allow you to set the user the Task Set shoudl be run as.
+       Will allow you to set the user the Task Set shoudl be run as.
 
--	workdir
+  -	workdir
 
-   Allows you to run the entire Task Set from a specified directory.
+       Allows you to run the entire Task Set from a specified directory.
 
--	tasks
+  -	tasks
 
-   A list of task objects taht define what this Task Set does when executed.
+       A list of task objects taht define what this Task Set does when executed.
 
 
 #### A task can contain these default attributes:
 
+  -	name  
 
- -	name  
+       name of the task
 
-    name of the task
+  -	dest  
 
- -	dest  
+       what this action will be performed on
 
-    what this action will be performed on
+  -	workdir
 
- -	workdir
+       where this action will be called from
 
-    where this action will be called from
+  -	wait
 
- -	wait
+       how long to wait before this action is called
 
-   how long to wait before this action is called
+  -	repeat 
 
- -	repeat 
+       how many times to run this action
 
-   how many times to run this action
+  -	ignore
 
- -	ignore
-
-  ignore failures or not
+       ignore failures or not
 
 
 ##### The type of a task is defined by the `action` field.
 
 This field's value is defined by eash plugin which imlpementes its own action.
-For instance, the two currently existing plugins implement these actions:
+For instance, the four currently existing plugins implement these actions:
 
- - command
+  - command
+       Runs an arbitrary bash command. No piping allowed for now.
 
-   Runs an arbitrary bash command. No piping allowed for now.
+  - write
+       Writes a string or text block to file. Can use env vars.
 
- - write
+  - replace
+       Replace a string with another in a file. Works with regex.
 
-   Writes a string or text block to file. Can use env vars.
-
- - Replace
-
-    Replace a string with another in a file. Works with regex.
+  - config
+       Add or change values in a config file
 
 
 These actions when defined in the drud.yaml look like this:
 
-command:
+###### command:
 
 ```
   - name: generic bash command
@@ -98,7 +97,7 @@ command:
     cmd: ls -l
 ```
 
-write:
+###### write:
 
 ```
   - name: make content
@@ -112,7 +111,7 @@ write:
     mode: 0777
 ```
 
-replace:
+###### replace:
 
 given a file named turtle.txt that contains `name: bob` and you want to replace `bob` with `james`
 
@@ -122,6 +121,19 @@ given a file named turtle.txt that contains `name: bob` and you want to replace 
     find: "(name:) ([a-z]*)"
     replace: "$1 james"
     dest: turtle.txt
+```
+
+###### config
+
+```
+  - name: config file
+    action: config
+    delim: ": "
+    items:
+      name: "configuration"
+      count: "10"
+      debug: "true"
+    dest: turtle.conf
 ```
 
 

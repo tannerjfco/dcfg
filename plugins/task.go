@@ -35,4 +35,5 @@ var TypeMap = map[string]Task{
 	"command": &Command{},
 	"write":   &Write{},
 	"replace": &Replace{},
+	"config":  &Config{},
 }
