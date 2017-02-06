@@ -9,7 +9,8 @@
 
 SHELL := /bin/bash
 
-GOFILES = $(shell find $(SRC_DIRS) -name "*.go")
+# GOFILES = $(shell find $(SRC_DIRS) -name "*.go")
+GOFILES = main.go
 
 BUILD_IMAGE ?= golang:1.7-alpine
 

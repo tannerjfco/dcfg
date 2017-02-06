@@ -3,7 +3,7 @@
 ##### These variables need to be adjusted in most repositories #####
 
 # This repo's root import path (under GOPATH).
-PKG := github.com/drud/repo_name
+PKG := github.com/drud/dcfg
 
 # Docker repo for a push
 # DOCKER_REPO ?= drud/docker_repo_name
@@ -12,7 +12,7 @@ PKG := github.com/drud/repo_name
 # UPSTREAM_REPO ?= full/upstream-docker-repo
 
 # Top-level directories to build
-SRC_DIRS := files drudapi secrets utils
+SRC_DIRS := .
 
 # Optional to docker build
 # DOCKER_ARGS =
