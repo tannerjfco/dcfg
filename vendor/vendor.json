@@ -3,10 +3,22 @@
 	"ignore": "test",
 	"package": [
 		{
+			"checksumSHA1": "NjT1+st86Z4sgWy1JuMyk0fdDDM=",
+			"path": "github.com/Masterminds/sprig",
+			"revision": "c974324bb59b465f00b128a055656d44f60e4ffc",
+			"revisionTime": "2017-01-30T19:30:58Z"
+		},
+		{
 			"checksumSHA1": "yXrS4e4yxaRBu/MX+39X3cS4kbg=",
 			"path": "github.com/Sirupsen/logrus",
 			"revision": "a283a10442df8dc09befd873fab202bf8a253d6a",
 			"revisionTime": "2016-07-16T02:56:31Z"
+		},
+		{
+			"checksumSHA1": "ryixco0k3QlLFtp7a1x2jznl7OY=",
+			"path": "github.com/aokoli/goutils",
+			"revision": "9c37978a95bd5c709a15883b6242714ea6709e64",
+			"revisionTime": "2014-05-02T00:11:28Z"
 		},
 		{
 			"checksumSHA1": "7OCBbeztrwhJCOKXTWTdp7+lAHY=",
@@ -22,10 +34,10 @@
 			"revisionTime": "2016-09-25T22:06:09Z"
 		},
 		{
-			"checksumSHA1": "Q21pr+fQqg/YMq2AvgLz4tVRkwg=",
+			"checksumSHA1": "abQCPINC6e866dt+b4JM9lYOJKY=",
 			"path": "github.com/drud/drud-go/utils",
-			"revision": "4c4964f771560040032ea987fce9839b8be8aca0",
-			"revisionTime": "2016-10-04T01:03:44Z"
+			"revision": "1c917ad16cd8b8ce402501babd41e37bbf32e9d8",
+			"revisionTime": "2016-12-27T23:03:32Z"
 		},
 		{
 			"checksumSHA1": "KOThXqDanFZmWCmJsOGrpVIdpPo=",
@@ -39,6 +51,12 @@
 			"path": "github.com/pmezard/go-difflib/difflib",
 			"revision": "976c720a22c8eb4eb6a0b4348ad85ad12491a506",
 			"revisionTime": "2016-09-25T22:06:09Z"
+		},
+		{
+			"checksumSHA1": "zmC8/3V4ls53DJlNTKDZwPSC/dA=",
+			"path": "github.com/satori/go.uuid",
+			"revision": "b061729afc07e77a8aa4fad0a2fd840958f1942a",
+			"revisionTime": "2016-09-27T10:08:44Z"
 		},
 		{
 			"checksumSHA1": "fEGgcE+iSzLkxdrbRj7j/vV7a7E=",
