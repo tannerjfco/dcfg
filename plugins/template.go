@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/drud/dcfg/apptpl"
-	"github.com/drud/drud-go/utils"
+	"github.com/drud/drud-go/utils/prettify"
 )
 
 // Template implements the Template Action
@@ -24,13 +24,13 @@ type Template struct {
 
 // String prints the Task
 func (t Template) String() string {
-	return utils.Prettify(t)
+	return prettify.Prettify(t)
 }
 
 // Run creates configurations for an app to deploy within the container.
 func (t Template) Run() error {
 	if t.App == "" {
-		return fmt.Errorf("No template specified")
+		return fmt.Errorf("No app specified")
 	}
 
 	if t.App == "drupal" {

@@ -5,11 +5,11 @@ import (
 	"text/template"
 
 	"github.com/Masterminds/sprig"
-	"github.com/drud/dcfg/dcfglib"
 )
 
 // DrupalConfig encapsulates all the configurations for a Drupal site.
 type DrupalConfig struct {
+	DeployURL        string
 	ConfigSyncDir    string
 	DatabaseName     string
 	DatabaseUsername string
@@ -34,7 +34,6 @@ func NewDrupalConfig() *DrupalConfig {
 		DatabaseDriver:   "mysql",
 		DatabasePort:     3306,
 		DatabasePrefix:   "",
-		HashSalt:         dcfglib.PassTheSalt(),
 		IsDrupal8:        false,
 	}
 }
@@ -69,7 +68,7 @@ $settings['file_scan_ignore_directories'] = [
 ];
 
  $config_directories = array(
-   CONFIG_SYNC_DIRECTORY => '{{ config.ConfigSyncDir }}',
+   CONFIG_SYNC_DIRECTORY => '{{ $config.ConfigSyncDir }}',
  );
 
 

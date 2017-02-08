@@ -10,7 +10,7 @@ import (
 
 	"crypto/sha256"
 
-	"github.com/drud/drud-go/utils"
+	stringutil "github.com/drud/drud-go/utils/strings"
 	"github.com/ghodss/yaml"
 )
 
@@ -52,7 +52,7 @@ func HasVars(command string) bool {
 // PassTheSalt generates a hash salt
 func PassTheSalt() string {
 	salt := sha256.New()
-	random := utils.RandomString(20)
+	random := stringutil.RandomString(20)
 	salt.Write([]byte(random))
 
 	return hex.EncodeToString(salt.Sum(nil))

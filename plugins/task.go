@@ -2,7 +2,7 @@
 // which when implemented can add functionality to the dcfg tool
 package plugins
 
-import "github.com/drud/drud-go/utils"
+import "github.com/drud/drud-go/utils/prettify"
 
 // Task is the interface that eash plugin must implement
 type Task interface {
@@ -22,7 +22,7 @@ type TaskDefaults struct {
 
 // String prints the Task
 func (t TaskDefaults) String() string {
-	return utils.Prettify(t)
+	return prettify.Prettify(t)
 }
 
 // TaskType is used so we can choose which Action implementation to use
