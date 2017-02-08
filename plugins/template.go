@@ -5,40 +5,35 @@ import (
 	"log"
 
 	"github.com/drud/dcfg/apptpl"
+	"github.com/drud/dcfg/apptpl/drupal"
 	"github.com/drud/drud-go/utils/prettify"
 )
 
-// Template implements the Template Action
-type Template struct {
-	TaskDefaults
-	App           string `yaml:"app"`
-	Core          string `yaml:"core"`
-	ConfigPath    string `yaml:"configPath"`
-	VHost         string `yaml:"vHost"`
-	DBPort        int    `yaml:"dbPort"`
-	DBPrefix      string `yaml:"dbPrefix"`
-	PublicFiles   string `yaml:"publicFiles"`
-	PrivateFiles  string `yaml:"privateFiles"`
-	ConfigSyncDir string `yaml:"configSyncDir"`
-}
+// // AppMap is used to retrieve the correct plugin
+// var AppMap = map[string]apptpl.App{
+// 	"drupal":    &drupal.DrupalConfig{},
+// 	"wordpress": &wordpress.WordpressConfig{},
+// }
 
 // String prints the Task
-func (t Template) String() string {
+func (t apptpl.Template) String() string {
 	return prettify.Prettify(t)
 }
 
 // Run creates configurations for an app to deploy within the container.
-func (t Template) Run() error {
+func (t apptpl.Template) Run() error {
 	if t.App == "" {
 		return fmt.Errorf("No app specified")
 	}
+
+	newapp := apptpl.AppMap[t.App]
 
 	if t.App == "drupal" {
 		log.Printf("Creating configurations for Drupal")
 		if t.ConfigPath == "" {
 			t.ConfigPath = "sites/default/"
 		}
-		confFile := apptpl.NewDrupalConfig()
+		confFile := drupal.NewDrupalConfig()
 		confFile.DatabasePort = t.DBPort
 		confFile.DatabasePrefix = t.DBPrefix
 		if t.Core == "8.x" {

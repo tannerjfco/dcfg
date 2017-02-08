@@ -1,10 +1,11 @@
-package apptpl
+package wordpress
 
 import (
 	"os"
 	"text/template"
 
 	"github.com/Masterminds/sprig"
+	"github.com/drud/dcfg/apptpl"
 )
 
 // WordpressConfig encapsulates all the configurations for a Wordpress site.
@@ -42,6 +43,14 @@ func NewWordpressConfig() *WordpressConfig {
 		DeployURL:        os.Getenv("DEPLOY_URL"),
 		DeployProtocol:   os.Getenv("DEPLOY_PROTOCOL"),
 	}
+}
+
+func (t *apptpl.Template) New() error {
+	return nil
+}
+
+func (t *apptpl.Template) Write() error {
+	return nil
 }
 
 const (

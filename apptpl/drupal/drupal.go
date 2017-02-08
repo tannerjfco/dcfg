@@ -1,10 +1,11 @@
-package apptpl
+package drupal
 
 import (
 	"os"
 	"text/template"
 
 	"github.com/Masterminds/sprig"
+	"github.com/drud/dcfg/apptpl"
 )
 
 // DrupalConfig encapsulates all the configurations for a Drupal site.
@@ -36,6 +37,14 @@ func NewDrupalConfig() *DrupalConfig {
 		DatabasePrefix:   "",
 		IsDrupal8:        false,
 	}
+}
+
+func (t *apptpl.Template) New() error {
+	return nil
+}
+
+func (t *apptpl.Template) Write() error {
+	return nil
 }
 
 const (
