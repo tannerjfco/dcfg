@@ -9,10 +9,10 @@
 			"revisionTime": "2017-01-30T19:30:58Z"
 		},
 		{
-			"checksumSHA1": "yXrS4e4yxaRBu/MX+39X3cS4kbg=",
+			"checksumSHA1": "cT6+XPBZiXsFbb7cXT6AYNrZyuM=",
 			"path": "github.com/Sirupsen/logrus",
-			"revision": "a283a10442df8dc09befd873fab202bf8a253d6a",
-			"revisionTime": "2016-07-16T02:56:31Z"
+			"revision": "3f603f494d61c73457fb234161d8982b9f0f0b71",
+			"revisionTime": "2017-02-07T18:34:08Z"
 		},
 		{
 			"checksumSHA1": "ryixco0k3QlLFtp7a1x2jznl7OY=",
@@ -34,16 +34,28 @@
 			"revisionTime": "2016-09-25T22:06:09Z"
 		},
 		{
-			"checksumSHA1": "abQCPINC6e866dt+b4JM9lYOJKY=",
-			"path": "github.com/drud/drud-go/utils",
-			"revision": "1c917ad16cd8b8ce402501babd41e37bbf32e9d8",
-			"revisionTime": "2016-12-27T23:03:32Z"
+			"checksumSHA1": "pPHwygZoWzJaDKcJ7QEvEyuPrUQ=",
+			"path": "github.com/drud/drud-go/utils/prettify",
+			"revision": "e2f633b15659dafd4bf00e809516d7261e9eb1cc",
+			"revisionTime": "2017-02-08T00:41:31Z"
+		},
+		{
+			"checksumSHA1": "dEwm+7KMFrQIqOEMsjePRNAEwUI=",
+			"path": "github.com/drud/drud-go/utils/system",
+			"revision": "e2f633b15659dafd4bf00e809516d7261e9eb1cc",
+			"revisionTime": "2017-02-08T00:41:31Z"
 		},
 		{
 			"checksumSHA1": "KOThXqDanFZmWCmJsOGrpVIdpPo=",
 			"path": "github.com/ghodss/yaml",
 			"revision": "1a6f069841556a7bcaff4a397ca6e8328d266c2f",
 			"revisionTime": "2016-03-07T21:52:05Z"
+		},
+		{
+			"checksumSHA1": "40vJyUB4ezQSn/NSadsKEOrudMc=",
+			"path": "github.com/inconshreveable/mousetrap",
+			"revision": "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75",
+			"revisionTime": "2014-10-17T20:07:13Z"
 		},
 		{
 			"checksumSHA1": "zKKp5SZ3d3ycKe4EKMNT0BqAWBw=",
@@ -77,10 +89,10 @@
 			"revisionTime": "2016-09-25T22:06:09Z"
 		},
 		{
-			"checksumSHA1": "u4rtURsE9Cn7TK4OPwH8axBMK6M=",
+			"checksumSHA1": "uTQtOqR0ePMMcvuvAIksiIZxhqU=",
 			"path": "golang.org/x/sys/unix",
-			"revision": "8d1157a435470616f975ff9bb013bea8d0962067",
-			"revisionTime": "2016-10-06T02:47:49Z"
+			"revision": "7a6e5648d140666db5d920909e082ca00a87ba2c",
+			"revisionTime": "2017-02-01T04:15:14Z"
 		}
 	],
 	"rootPath": "github.com/drud/dcfg"
