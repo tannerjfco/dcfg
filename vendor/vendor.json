@@ -34,10 +34,16 @@
 			"revisionTime": "2016-09-25T22:06:09Z"
 		},
 		{
-			"checksumSHA1": "pPHwygZoWzJaDKcJ7QEvEyuPrUQ=",
-			"path": "github.com/drud/drud-go/utils/prettify",
-			"revision": "e2f633b15659dafd4bf00e809516d7261e9eb1cc",
-			"revisionTime": "2017-02-08T00:41:31Z"
+			"checksumSHA1": "t01l9GMxPPn/ThMgpk9pWkzjm4g=",
+			"path": "github.com/drud/drud-go/utils/pretty",
+			"revision": "9b67ecb34ec7765e28a6db1cf8bcfb4323c6f4f9",
+			"revisionTime": "2017-02-09T02:13:43Z"
+		},
+		{
+			"checksumSHA1": "iAwuw+lHePVbzI7mb80cdsO5Le4=",
+			"path": "github.com/drud/drud-go/utils/stringutil",
+			"revision": "9b67ecb34ec7765e28a6db1cf8bcfb4323c6f4f9",
+			"revisionTime": "2017-02-09T02:13:43Z"
 		},
 		{
 			"checksumSHA1": "dEwm+7KMFrQIqOEMsjePRNAEwUI=",
