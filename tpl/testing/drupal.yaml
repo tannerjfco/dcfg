@@ -1,0 +1,43 @@
+- name: default
+  tasks:
+    - action: template
+      app: drupal
+
+- name: drupal8
+  tasks:
+    - action: template
+      app: drupal
+      core: 8.x
+
+# - name: ddev_configured
+#   env:
+#     deployURL: $DEPLOY_URL
+#     dbName: $DB_NAME
+#   tasks:
+#     - action: template
+#       app: drupal
+#       deployURL: {{ .deployURL }}
+#       dbName: {{ .dbName }}
+
+- name: weird_file_dir
+  tasks:
+    - action: template
+      app: drupal
+      publicFiles: potato
+
+- name: have_docroot
+  tasks:
+    - action: template
+      app: drupal
+      docroot: docroot
+
+# - name: all_the_things
+#   tasks:
+#     - action: template
+#       app: drupal
+#       core: 8.x
+#       docroot: docroot
+#       deployURL: http://www.potatocakes.com
+#       publicFiles: potato_pub
+#       privateFiles: potato_private
+#       configSyncDir: /var/www/html/potato_conf

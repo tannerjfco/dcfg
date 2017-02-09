@@ -1,0 +1,5 @@
+- name: pre-start
+  tasks:
+    - action: template
+      app: wordpress
+      dbPrefix: foo_

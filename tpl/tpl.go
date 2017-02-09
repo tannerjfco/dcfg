@@ -11,7 +11,7 @@ type Config struct {
 	App           string `yaml:"app"`
 	Core          string `yaml:"core"`
 	ConfigPath    string `yaml:"configPath"`
-	VHost         string `yaml:"vHost"`
+	DocRoot       string `yaml:"docroot"`
 	DBPort        int    `yaml:"dbPort"`
 	DBPrefix      string `yaml:"dbPrefix"`
 	PublicFiles   string `yaml:"publicFiles"`

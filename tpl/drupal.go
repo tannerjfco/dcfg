@@ -9,6 +9,7 @@ import (
 
 // DrupalConfig encapsulates all the configurations for a Drupal site.
 type DrupalConfig struct {
+	Core             string
 	DeployURL        string
 	ConfigSyncDir    string
 	DatabaseName     string
@@ -26,6 +27,7 @@ type DrupalConfig struct {
 // NewDrupalConfig initializes a DrupalConfig object with defaults
 func NewDrupalConfig() *DrupalConfig {
 	return &DrupalConfig{
+		Core:             "7.x",
 		ConfigSyncDir:    "/var/www/html/sync",
 		DatabaseName:     "data",
 		DatabaseUsername: "root",
@@ -42,6 +44,9 @@ func NewDrupalConfig() *DrupalConfig {
 func (c *DrupalConfig) WriteConfig(in *Config) error {
 	conf := NewDrupalConfig()
 	conf.DatabasePort = in.DBPort
+	if in.Core == "8.x" {
+		conf.IsDrupal8 = true
+	}
 
 	tmpl, err := template.New("conf").Funcs(sprig.TxtFuncMap()).Parse(drupalTemplate)
 	if err != nil {
