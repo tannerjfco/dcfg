@@ -2,7 +2,10 @@
 // which when implemented can add functionality to the dcfg tool
 package plugins
 
-import "github.com/drud/drud-go/utils/prettify"
+import (
+	"github.com/drud/dcfg/tpl"
+	"github.com/drud/drud-go/utils/prettify"
+)
 
 // Task is the interface that eash plugin must implement
 type Task interface {
@@ -36,5 +39,5 @@ var TypeMap = map[string]Task{
 	"write":    &Write{},
 	"replace":  &Replace{},
 	"config":   &Config{},
-	"template": &Template{},
+	"template": &tpl.Config{},
 }

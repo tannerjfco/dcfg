@@ -1,11 +1,10 @@
-package wordpress
+package tpl
 
 import (
 	"os"
 	"text/template"
 
 	"github.com/Masterminds/sprig"
-	"github.com/drud/dcfg/apptpl"
 )
 
 // WordpressConfig encapsulates all the configurations for a Wordpress site.
@@ -28,29 +27,6 @@ type WordpressConfig struct {
 	NonceSalt        string
 	Docroot          string
 	TablePrefix      string
-}
-
-// NewWordpressConfig produces a WordpressConfig object with defaults.
-func NewWordpressConfig() *WordpressConfig {
-	return &WordpressConfig{
-		WPGeneric:        false,
-		DatabaseName:     "data",
-		DatabaseUsername: "root",
-		DatabasePassword: "root",
-		DatabaseHost:     "127.0.0.1",
-		Docroot:          "/var/www/html/docroot",
-		TablePrefix:      "wp_",
-		DeployURL:        os.Getenv("DEPLOY_URL"),
-		DeployProtocol:   os.Getenv("DEPLOY_PROTOCOL"),
-	}
-}
-
-func (t *apptpl.Template) New() error {
-	return nil
-}
-
-func (t *apptpl.Template) Write() error {
-	return nil
 }
 
 const (
@@ -241,20 +217,45 @@ require_once( ABSPATH . 'wp-settings.php' );
 `
 )
 
-// WriteWordpressConfig dynamically produces valid wp-config.php file by combining a configuration
-// object with a data-driven template.
-func WriteWordpressConfig(wordpressConfig *WordpressConfig, filePath string) error {
-	tmpl, err := template.New("wordpressConfig").Funcs(sprig.TxtFuncMap()).Parse(wordpressTemplate)
+// NewWordpressConfig produces a WordpressConfig object with defaults.
+func NewWordpressConfig() *WordpressConfig {
+	return &WordpressConfig{
+		WPGeneric:        false,
+		DatabaseName:     "data",
+		DatabaseUsername: "root",
+		DatabasePassword: "root",
+		DatabaseHost:     "127.0.0.1",
+		Docroot:          "/var/www/html/docroot",
+		TablePrefix:      "wp_",
+		DeployURL:        os.Getenv("DEPLOY_URL"),
+		DeployProtocol:   os.Getenv("DEPLOY_PROTOCOL"),
+	}
+}
+
+// WriteConfig produces a valid settings.php file from the defined configurations
+func (c *WordpressConfig) WriteConfig(in *Config) error {
+	conf := NewWordpressConfig()
+	conf.TablePrefix = in.DBPrefix
+
+	tmpl, err := template.New("conf").Funcs(sprig.TxtFuncMap()).Parse(wordpressTemplate)
 	if err != nil {
 		return err
 	}
-	file, err := os.Create(filePath)
+
+	filepath := ""
+	if in.ConfigPath != "" {
+		filepath = in.ConfigPath
+	}
+
+	file, err := os.Create(filepath + "wp-config.php")
 	if err != nil {
 		return err
 	}
-	err = tmpl.Execute(file, wordpressConfig)
+
+	err = tmpl.Execute(file, conf)
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
