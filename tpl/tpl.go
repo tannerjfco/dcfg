@@ -22,6 +22,7 @@ type Config struct {
 // Tpl is the interface that each plugin must implement
 type Tpl interface {
 	WriteConfig(in *Config) error
+	PlaceFiles(in *Config) error
 }
 
 // TplMap is used to retrieve the correct plugin

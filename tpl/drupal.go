@@ -65,3 +65,8 @@ func (c *DrupalConfig) WriteConfig(in *Config) error {
 
 	return nil
 }
+
+// PlaceFiles determines where file upload directories should go.
+func (c *DrupalConfig) PlaceFiles(in *Config) error {
+	return nil
+}

@@ -71,3 +71,8 @@ func (c *WordpressConfig) WriteConfig(in *Config) error {
 
 	return nil
 }
+
+// PlaceFiles determines where file upload directories should go.
+func (c *WordpressConfig) PlaceFiles(in *Config) error {
+	return nil
+}
