@@ -3,7 +3,7 @@ package tpl
 import (
 	"log"
 
-	"github.com/drud/drud-go/utils/prettify"
+	"github.com/drud/drud-go/utils/pretty"
 )
 
 // Config implements the Template Action
@@ -32,7 +32,7 @@ var TplMap = map[string]Tpl{
 
 // String prints the Task
 func (c Config) String() string {
-	return prettify.Prettify(c)
+	return pretty.Prettify(c)
 }
 
 // Run creates configurations for an application

@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/drud/drud-go/utils/prettify"
+	"github.com/drud/drud-go/utils/pretty"
 )
 
 // Config implements the Config Action
@@ -19,7 +19,7 @@ type Config struct {
 }
 
 func (c Config) String() string {
-	return prettify.Prettify(c)
+	return pretty.Prettify(c)
 }
 
 // Run executes the command task

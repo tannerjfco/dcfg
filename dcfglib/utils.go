@@ -10,7 +10,7 @@ import (
 
 	"crypto/sha256"
 
-	stringutil "github.com/drud/drud-go/utils/strings"
+	"github.com/drud/drud-go/utils/stringutil"
 	"github.com/ghodss/yaml"
 )
 

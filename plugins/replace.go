@@ -6,7 +6,7 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/drud/drud-go/utils/prettify"
+	"github.com/drud/drud-go/utils/pretty"
 )
 
 // Replace implements the Replace Action
@@ -17,7 +17,7 @@ type Replace struct {
 }
 
 func (r Replace) String() string {
-	return prettify.Prettify(r)
+	return pretty.Prettify(r)
 }
 
 // Run executes the command task

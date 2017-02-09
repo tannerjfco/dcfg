@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/drud/drud-go/utils/prettify"
+	"github.com/drud/drud-go/utils/pretty"
 )
 
 // Write implements the Write Action
@@ -18,7 +18,7 @@ type Write struct {
 }
 
 func (w Write) String() string {
-	return prettify.Prettify(w)
+	return pretty.Prettify(w)
 }
 
 // Run uses the data stored in the Write struct to execute the Write command

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/drud/drud-go/utils/prettify"
+	"github.com/drud/drud-go/utils/pretty"
 	"github.com/drud/drud-go/utils/system"
 )
 
@@ -16,7 +16,7 @@ type Command struct {
 }
 
 func (c Command) String() string {
-	return prettify.Prettify(c)
+	return pretty.Prettify(c)
 }
 
 // Run executes the command task

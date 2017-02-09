@@ -4,7 +4,7 @@ package plugins
 
 import (
 	"github.com/drud/dcfg/tpl"
-	"github.com/drud/drud-go/utils/prettify"
+	"github.com/drud/drud-go/utils/pretty"
 )
 
 // Task is the interface that eash plugin must implement
@@ -25,7 +25,7 @@ type TaskDefaults struct {
 
 // String prints the Task
 func (t TaskDefaults) String() string {
-	return prettify.Prettify(t)
+	return pretty.Prettify(t)
 }
 
 // TaskType is used so we can choose which Action implementation to use
