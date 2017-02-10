@@ -1,9 +1,12 @@
 package tpl
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"log"
 
 	"github.com/drud/drud-go/utils/pretty"
+	"github.com/drud/drud-go/utils/stringutil"
 )
 
 // Config implements the Template Action
@@ -12,17 +15,17 @@ type Config struct {
 	Core             string `yaml:"core"`
 	ConfigPath       string `yaml:"configPath"`
 	DocRoot          string `yaml:"docroot"`
-	DatabaseName     string `yaml:"dbName"`
-	DatabaseUsername string `yaml:"dbUser"`
-	DatabasePassword string `yaml:"dbPass"`
-	DatabaseHost     string `yaml:"dbHost"`
-	DatabaseDriver   string `yaml:"dbDriver"`
-	DatabasePort     int    `yaml:"dbPort"`
-	DatabasePrefix   string `yaml:"dbPrefix"`
+	DatabaseName     string `yaml:"databaseName"`
+	DatabaseUsername string `yaml:"databaseUsername"`
+	DatabasePassword string `yaml:"databasePassword"`
+	DatabaseHost     string `yaml:"databaseHost"`
+	DatabaseDriver   string `yaml:"databaseDriver"`
+	DatabasePort     int    `yaml:"databasePort"`
+	DatabasePrefix   string `yaml:"databasePrefix"`
 	PublicFiles      string `yaml:"publicFiles"`
 	PrivateFiles     string `yaml:"privateFiles"`
 	ConfigSyncDir    string `yaml:"configSyncDir"`
-	DeployURL        string `yaml:"deployURL"`
+	SiteURL          string `yaml:"siteURL"`
 }
 
 // Tpl is the interface that each plugin must implement
@@ -54,4 +57,13 @@ func (c *Config) Run() error {
 	}
 
 	return nil
+}
+
+// PassTheSalt generates a hash salt
+func PassTheSalt() string {
+	salt := sha256.New()
+	random := stringutil.RandomString(20)
+	salt.Write([]byte(random))
+
+	return hex.EncodeToString(salt.Sum(nil))
 }

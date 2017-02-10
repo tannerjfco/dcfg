@@ -16,8 +16,8 @@
   tasks:
     - action: template
       app: drupal
-      deployURL: '{{.DEPLOY_URL}}'
-      dbName: '{{ .DB_NAME }}'
+      siteURL: '{{.DEPLOY_URL}}'
+      databaseName: '{{.DB_NAME}}'
 
 # - name: weird_file_dir
 #   tasks:

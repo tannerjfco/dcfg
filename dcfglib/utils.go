@@ -1,16 +1,12 @@
 package dcfglib
 
 import (
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"log"
 	"os"
 	"strings"
 
-	"crypto/sha256"
-
-	"github.com/drud/drud-go/utils/stringutil"
 	"github.com/ghodss/yaml"
 )
 
@@ -47,13 +43,4 @@ func HasVars(command string) bool {
 		}
 	}
 	return false
-}
-
-// PassTheSalt generates a hash salt
-func PassTheSalt() string {
-	salt := sha256.New()
-	random := stringutil.RandomString(20)
-	salt.Write([]byte(random))
-
-	return hex.EncodeToString(salt.Sum(nil))
 }

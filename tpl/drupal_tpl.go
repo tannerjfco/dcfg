@@ -37,7 +37,7 @@ $settings['file_scan_ignore_directories'] = [
 {{ else }}
 
 $drupal_hash_salt = '{{ $config.HashSalt }}';
-$base_url = '{{ $config.DeployURL }}';
+$base_url = '{{ $config.SiteURL }}';
 
 if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
   $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
@@ -45,10 +45,14 @@ if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
 }
 {{ end }}
 
-if (file_exists(__DIR__ . '/custom.settings.php')) {
-  include __DIR__ . '/custom.settings.php';
+// This allows you to provide a configuration file in your site's code base for
+// configurations that should be present in any environment.
+if (file_exists(__DIR__ . '/settings.custom.php')) {
+  include __DIR__ . '/settings.custom.php';
 }
 
+// This allows you to provide a configuration file in your site's code base for
+// configurations that should be present for a local development environment.
 if (isset($_ENV['DEPLOY_NAME']) && $_ENV['DEPLOY_NAME'] == 'local' && file_exists(__DIR__ . '/settings.local.php')) {
   include __DIR__ . '/settings.local.php';
 }

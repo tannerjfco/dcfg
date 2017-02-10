@@ -11,7 +11,7 @@ import (
 // DrupalConfig encapsulates all the configurations for a Drupal site.
 type DrupalConfig struct {
 	Core             string
-	DeployURL        string
+	SiteURL          string
 	ConfigSyncDir    string
 	DatabaseName     string
 	DatabaseUsername string
@@ -37,6 +37,7 @@ func NewDrupalConfig() *DrupalConfig {
 		DatabaseDriver:   "mysql",
 		DatabasePort:     3306,
 		DatabasePrefix:   "",
+		HashSalt:         PassTheSalt(),
 		IsDrupal8:        false,
 	}
 }
