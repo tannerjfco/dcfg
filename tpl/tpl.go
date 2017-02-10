@@ -33,8 +33,8 @@ type Tpl interface {
 
 // TplMap is used to retrieve the correct plugin
 var TplMap = map[string]Tpl{
-	"drupal":    &DrupalConfig{},
-	"wordpress": &WordpressConfig{},
+	"drupal": &DrupalConfig{},
+	// "wordpress": &WordpressConfig{},
 }
 
 // String prints the Task

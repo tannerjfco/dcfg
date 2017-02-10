@@ -5,6 +5,7 @@ import (
 	"text/template"
 
 	"github.com/Masterminds/sprig"
+	"gopkg.in/oleiade/reflections.v1"
 )
 
 // DrupalConfig encapsulates all the configurations for a Drupal site.
@@ -43,14 +44,29 @@ func NewDrupalConfig() *DrupalConfig {
 // WriteConfig produces a valid settings.php file from the defined configurations
 func (c *DrupalConfig) WriteConfig(in *Config) error {
 	conf := NewDrupalConfig()
-	// conf.DatabasePort = in.DatabasePort
-
-	if in.ConfigSyncDir != "" {
-		conf.ConfigSyncDir = in.ConfigSyncDir
-	}
 
 	if in.Core == "8.x" {
 		conf.IsDrupal8 = true
+	}
+
+	srcFieldList, err := reflections.Items(in)
+	if err != nil {
+		return err
+	}
+
+	for field, val := range srcFieldList {
+		if val != "" {
+			has, err := reflections.HasField(conf, field)
+			if err != nil {
+				return err
+			}
+			if has && val != 0 {
+				err = reflections.SetField(conf, field, val)
+				if err != nil {
+					return err
+				}
+			}
+		}
 	}
 
 	tmpl, err := template.New("conf").Funcs(sprig.TxtFuncMap()).Parse(drupalTemplate)

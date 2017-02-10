@@ -11,13 +11,13 @@
 
 - name: ddev_configured
   env:
-    url: $DEPLOY_URL
-    dbName: $DB_NAME
+    DEPLOY_URL: $DEPLOY_URL
+    DB_NAME: $DB_NAME
   tasks:
     - action: template
       app: drupal
-      deployURL: '{{.url}}'
-      dbName: '{{ .dbName }}'
+      deployURL: '{{.DEPLOY_URL}}'
+      dbName: '{{ .DB_NAME }}'
 
 # - name: weird_file_dir
 #   tasks:

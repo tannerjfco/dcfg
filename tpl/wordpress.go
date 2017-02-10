@@ -47,7 +47,7 @@ func NewWordpressConfig() *WordpressConfig {
 // WriteConfig produces a valid settings.php file from the defined configurations
 func (c *WordpressConfig) WriteConfig(in *Config) error {
 	conf := NewWordpressConfig()
-	conf.TablePrefix = in.DBPrefix
+	conf.TablePrefix = in.DatabasePrefix
 
 	tmpl, err := template.New("conf").Funcs(sprig.TxtFuncMap()).Parse(wordpressTemplate)
 	if err != nil {
