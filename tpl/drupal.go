@@ -43,7 +43,12 @@ func NewDrupalConfig() *DrupalConfig {
 // WriteConfig produces a valid settings.php file from the defined configurations
 func (c *DrupalConfig) WriteConfig(in *Config) error {
 	conf := NewDrupalConfig()
-	conf.DatabasePort = in.DBPort
+	// conf.DatabasePort = in.DatabasePort
+
+	if in.ConfigSyncDir != "" {
+		conf.ConfigSyncDir = in.ConfigSyncDir
+	}
+
 	if in.Core == "8.x" {
 		conf.IsDrupal8 = true
 	}

@@ -47,6 +47,7 @@ func TestDrupalWriteConfig(t *testing.T) {
 	result, err = ioutil.ReadFile(confFile)
 	assert.NoError(err)
 	assert.Contains(string(result), "$base_url = 'http://www.test.site';")
+	assert.Contains(string(result), "'database' => \"db\"")
 	err = os.Remove(confFile)
 	assert.Nil(err)
 

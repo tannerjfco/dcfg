@@ -8,15 +8,21 @@ import (
 
 // Config implements the Template Action
 type Config struct {
-	App           string `yaml:"app"`
-	Core          string `yaml:"core"`
-	ConfigPath    string `yaml:"configPath"`
-	DocRoot       string `yaml:"docroot"`
-	DBPort        int    `yaml:"dbPort"`
-	DBPrefix      string `yaml:"dbPrefix"`
-	PublicFiles   string `yaml:"publicFiles"`
-	PrivateFiles  string `yaml:"privateFiles"`
-	ConfigSyncDir string `yaml:"configSyncDir"`
+	App              string `yaml:"app"`
+	Core             string `yaml:"core"`
+	ConfigPath       string `yaml:"configPath"`
+	DocRoot          string `yaml:"docroot"`
+	DatabaseName     string `yaml:"dbName"`
+	DatabaseUsername string `yaml:"dbUser"`
+	DatabasePassword string `yaml:"dbPass"`
+	DatabaseHost     string `yaml:"dbHost"`
+	DatabaseDriver   string `yaml:"dbDriver"`
+	DatabasePort     int    `yaml:"dbPort"`
+	DatabasePrefix   string `yaml:"dbPrefix"`
+	PublicFiles      string `yaml:"publicFiles"`
+	PrivateFiles     string `yaml:"privateFiles"`
+	ConfigSyncDir    string `yaml:"configSyncDir"`
+	DeployURL        string `yaml:"deployURL"`
 }
 
 // Tpl is the interface that each plugin must implement
