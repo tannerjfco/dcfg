@@ -5,6 +5,8 @@ import (
 	"encoding/hex"
 	"log"
 
+	"os"
+
 	"github.com/drud/drud-go/utils/pretty"
 	"github.com/drud/drud-go/utils/stringutil"
 )
@@ -22,6 +24,7 @@ type Config struct {
 	DatabaseDriver   string `yaml:"databaseDriver"`
 	DatabasePort     int    `yaml:"databasePort"`
 	DatabasePrefix   string `yaml:"databasePrefix"`
+	IgnoreFiles      bool   `yaml:"ignoreFiles"`
 	PublicFiles      string `yaml:"publicFiles"`
 	PrivateFiles     string `yaml:"privateFiles"`
 	ConfigSyncDir    string `yaml:"configSyncDir"`
@@ -31,7 +34,7 @@ type Config struct {
 // Tpl is the interface that each plugin must implement
 type Tpl interface {
 	WriteConfig(in *Config) error
-	PlaceFiles(in *Config) error
+	PlaceFiles(in *Config, move bool) error
 }
 
 // TplMap is used to retrieve the correct plugin
@@ -54,6 +57,14 @@ func (c *Config) Run() error {
 	err := app.WriteConfig(c)
 	if err != nil {
 		return err
+	}
+
+	if !c.IgnoreFiles {
+		if os.Getenv("DEPLOY_NAME") == "local" {
+			app.PlaceFiles(c, true)
+		} else {
+			app.PlaceFiles(c, false)
+		}
 	}
 
 	return nil

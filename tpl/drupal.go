@@ -1,10 +1,16 @@
 package tpl
 
 import (
+	"fmt"
 	"os"
 	"text/template"
 
+	"path"
+
+	"log"
+
 	"github.com/Masterminds/sprig"
+	"github.com/drud/drud-go/utils/system"
 	"gopkg.in/oleiade/reflections.v1"
 )
 
@@ -94,6 +100,39 @@ func (c *DrupalConfig) WriteConfig(in *Config) error {
 }
 
 // PlaceFiles determines where file upload directories should go.
-func (c *DrupalConfig) PlaceFiles(in *Config) error {
+func (c *DrupalConfig) PlaceFiles(in *Config, move bool) error {
+	src := "/files"
+	dest := "sites/default/files"
+	if in.PublicFiles != "" {
+		dest = in.PublicFiles
+	}
+
+	if !system.FileExists(src) {
+		log.Fatalf("source path for files does not exist")
+	}
+
+	if system.FileExists(dest) {
+		log.Printf("destination path exists, removing")
+		os.RemoveAll(dest)
+	}
+
+	// ensure parent of destination is writable
+	os.Chmod(path.Dir(src), 0755)
+
+	if move {
+		out, err := system.RunCommand(
+			"rsync",
+			[]string{"-avz", "--recursive", src + "/", dest},
+		)
+		if err != nil {
+			return fmt.Errorf("%s - %s", err.Error(), string(out))
+		}
+	} else {
+		err := os.Symlink(src, dest)
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
