@@ -35,6 +35,7 @@ type Config struct {
 type Tpl interface {
 	WriteConfig(in *Config) error
 	PlaceFiles(in *Config, move bool) error
+	WebConfig(in *Config) error
 }
 
 // TplMap is used to retrieve the correct plugin
@@ -65,6 +66,10 @@ func (c *Config) Run() error {
 		} else {
 			app.PlaceFiles(c, false)
 		}
+	}
+
+	if c.DocRoot != "" {
+		app.WebConfig(c)
 	}
 
 	return nil

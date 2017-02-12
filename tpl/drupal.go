@@ -9,6 +9,9 @@ import (
 
 	"log"
 
+	"io/ioutil"
+	"regexp"
+
 	"github.com/Masterminds/sprig"
 	"github.com/drud/drud-go/utils/system"
 	"gopkg.in/oleiade/reflections.v1"
@@ -132,6 +135,31 @@ func (c *DrupalConfig) PlaceFiles(in *Config, move bool) error {
 		if err != nil {
 			return err
 		}
+	}
+
+	return nil
+}
+
+// WebConfig updates the web server configuration to support the provided app configurations
+func (c *DrupalConfig) WebConfig(in *Config) error {
+	dest := "/etc/nginx/sites-available/default.conf"
+	root := "root /var/www/html"
+
+	if !system.FileExists(dest) {
+		log.Fatalf("target %s does not exist", dest)
+	}
+
+	conf, err := ioutil.ReadFile(dest)
+	if err != nil {
+		return err
+	}
+
+	re := regexp.MustCompile(root)
+	new := re.ReplaceAllString(string(conf), root+in.DocRoot)
+
+	err = ioutil.WriteFile(dest, []byte(new), 0644)
+	if err != nil {
+		return err
 	}
 
 	return nil
