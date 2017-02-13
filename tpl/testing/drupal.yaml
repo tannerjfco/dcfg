@@ -2,12 +2,14 @@
   tasks:
     - action: template
       app: drupal
+      ignoreFiles: true
 
 - name: drupal8
   tasks:
     - action: template
       app: drupal
       core: 8.x
+      ignoreFiles: true
 
 - name: ddev_configured
   env:
@@ -18,18 +20,20 @@
       app: drupal
       siteURL: '{{.DEPLOY_URL}}'
       databaseName: '{{.DB_NAME}}'
+      ignoreFiles: true
 
-# - name: weird_file_dir
-#   tasks:
-#     - action: template
-#       app: drupal
-#       publicFiles: potato
+- name: weird_file_dir
+  tasks:
+    - action: template
+      app: drupal
+      publicFiles: potato
 
-# - name: have_docroot
-#   tasks:
-#     - action: template
-#       app: drupal
-#       docroot: docroot
+- name: have_docroot
+  tasks:
+    - action: template
+      app: drupal
+      docroot: docroot
+      publicFiles: docroot/sites/default/files
 
 # - name: all_the_things
 #   tasks:

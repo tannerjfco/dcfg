@@ -48,11 +48,40 @@ func TestDrupalWriteConfig(t *testing.T) {
 	assert.NoError(err)
 	assert.Contains(string(result), "$base_url = 'http://www.test.site';")
 	assert.Contains(string(result), "'database' => \"db\"")
+	os.Unsetenv("DEPLOY_URL")
+	os.Unsetenv("DB_NAME")
 	err = os.Remove(confFile)
 	assert.Nil(err)
 
-	// // test creating a config that handles a strange files directory
-	// args[1] = "weird_file_dir"
+	// test creating a config that handles a strange files directory
+	args[1] = "weird_file_dir"
+	src := "testing/file_src"
+	dest := "potato"
+	os.Setenv("FILE_SRC", src)
+	os.MkdirAll(src, 0755)
+	os.Create(src + "/testfile")
+	_, err = system.RunCommand(bin, args)
+	assert.NoError(err)
+	assert.True(system.FileExists(dest))
+	assert.True(system.FileExists(dest + "/testfile"))
+	// validate the symlink
+	link, err := os.Readlink(dest)
+	assert.NoError(err)
+	assert.Contains(link, "testing/file_src")
+	// reset to test as dir we rsync to
+	os.Remove(confFile)
+	os.Remove(dest)
+	os.Setenv("DEPLOY_NAME", "local")
+	_, err = system.RunCommand(bin, args)
+	assert.NoError(err)
+	assert.True(system.FileExists(dest))
+	assert.True(system.FileExists(dest + "/testfile"))
+	// cleanup
+	os.Remove(confFile)
+	os.Unsetenv("FILE_SRC")
+	os.Unsetenv("DEPLOY_NAME")
+	os.RemoveAll(src)
+	os.RemoveAll(dest)
 
 	// // test configuring a site contained in a folder called docroot
 	// args[1] = "have_docroot"

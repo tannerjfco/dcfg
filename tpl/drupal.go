@@ -104,13 +104,13 @@ func (c *DrupalConfig) WriteConfig(in *Config) error {
 
 // PlaceFiles determines where file upload directories should go.
 func (c *DrupalConfig) PlaceFiles(in *Config, move bool) error {
-	src := "/files"
+	src := os.Getenv("FILE_SRC")
 	dest := "sites/default/files"
 	if in.PublicFiles != "" {
 		dest = in.PublicFiles
 	}
 
-	if !system.FileExists(src) {
+	if src == "" || !system.FileExists(src) {
 		log.Fatalf("source path for files does not exist")
 	}
 
@@ -142,7 +142,7 @@ func (c *DrupalConfig) PlaceFiles(in *Config, move bool) error {
 
 // WebConfig updates the web server configuration to support the provided app configurations
 func (c *DrupalConfig) WebConfig(in *Config) error {
-	dest := "/etc/nginx/sites-available/default.conf"
+	dest := os.Getenv("NGINX_SITE_CONF")
 	root := "root /var/www/html"
 
 	if !system.FileExists(dest) {
