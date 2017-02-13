@@ -11,6 +11,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const (
+	testConf = `
+	server {
+		listen 80; ## listen for ipv4; this line is default and implied
+		listen [::]:80 default ipv6only=on; ## listen for ipv6
+		root /var/www/html;
+	}`
+)
+
 func TestDrupalWriteConfig(t *testing.T) {
 	assert := assert.New(t)
 	bin := "dcfg"
@@ -83,10 +92,49 @@ func TestDrupalWriteConfig(t *testing.T) {
 	os.RemoveAll(src)
 	os.RemoveAll(dest)
 
-	// // test configuring a site contained in a folder called docroot
-	// args[1] = "have_docroot"
+	// test configuring a site contained in a folder called docroot
+	args[1] = "have_docroot"
+	webConf := "test.conf"
+	ioutil.WriteFile(webConf, []byte(testConf), os.FileMode(0644))
+	os.Setenv("NGINX_SITE_CONF", webConf)
+	_, err = system.RunCommand(bin, args)
+	assert.NoError(err)
+	result, err = ioutil.ReadFile(webConf)
+	assert.NoError(err)
+	assert.Contains(string(result), "root /var/www/html/docroot;")
+	os.Remove(webConf)
 
-	// // test a drupal app definition with all options set
-	// args[1] = "all_the_things"
-
+	// test a drupal app definition with all options set
+	args[1] = "all_the_things"
+	os.Setenv("FILE_SRC", src)
+	os.MkdirAll(src, 0755)
+	os.Create(src + "/testfile")
+	ioutil.WriteFile(webConf, []byte(testConf), os.FileMode(0644))
+	_, err = system.RunCommand(bin, args)
+	assert.NoError(err)
+	// check web config
+	webResult, err := ioutil.ReadFile(webConf)
+	assert.NoError(err)
+	assert.Contains(string(webResult), "root /var/www/html/potato;")
+	// check file dir
+	fileDest := "potato_pub"
+	assert.True(system.FileExists(fileDest))
+	assert.True(system.FileExists(fileDest + "/testfile"))
+	// check settings.php contents
+	result, err = ioutil.ReadFile(confFile)
+	assert.NoError(err)
+	assert.Contains(string(result), "CONFIG_SYNC_DIRECTORY => '/var/www/html/potato_conf',")
+	assert.Contains(string(result), "'database' => \"potato\"")
+	assert.Contains(string(result), "'username' => \"spud\"")
+	assert.Contains(string(result), "'password' => \"spudtato\"")
+	assert.Contains(string(result), "'host' => \"potatodb.com\"")
+	assert.Contains(string(result), "'driver' => \"mysql\"")
+	assert.Contains(string(result), "'port' => 1234")
+	assert.Contains(string(result), "'prefix' => \"spud_\"")
+	// cleanup
+	os.Remove(webConf)
+	os.Remove(confFile)
+	os.RemoveAll(src)
+	os.RemoveAll(fileDest)
+	os.Unsetenv("FILE_SRC")
 }

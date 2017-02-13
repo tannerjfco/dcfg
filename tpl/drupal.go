@@ -141,6 +141,7 @@ func (c *DrupalConfig) PlaceFiles(in *Config, move bool) error {
 }
 
 // WebConfig updates the web server configuration to support the provided app configurations
+// @TODO: need to update rules for public/private files, holding off until more firm on approach for this task.
 func (c *DrupalConfig) WebConfig(in *Config) error {
 	dest := os.Getenv("NGINX_SITE_CONF")
 	root := "root /var/www/html"
@@ -155,7 +156,7 @@ func (c *DrupalConfig) WebConfig(in *Config) error {
 	}
 
 	re := regexp.MustCompile(root)
-	new := re.ReplaceAllString(string(conf), root+in.DocRoot)
+	new := re.ReplaceAllString(string(conf), root+"/"+in.DocRoot)
 
 	err = ioutil.WriteFile(dest, []byte(new), 0644)
 	if err != nil {

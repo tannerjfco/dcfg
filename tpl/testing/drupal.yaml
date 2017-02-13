@@ -33,15 +33,21 @@
     - action: template
       app: drupal
       docroot: docroot
-      publicFiles: docroot/sites/default/files
+      ignoreFiles: true
 
-# - name: all_the_things
-#   tasks:
-#     - action: template
-#       app: drupal
-#       core: 8.x
-#       docroot: docroot
-#       deployURL: http://www.potatocakes.com
-#       publicFiles: potato_pub
-#       privateFiles: potato_private
-#       configSyncDir: /var/www/html/potato_conf
+- name: all_the_things
+  tasks:
+    - action: template
+      app: drupal
+      core: 8.x
+      docroot: potato
+      deployURL: http://www.potatocakes.com
+      publicFiles: potato_pub
+      configSyncDir: /var/www/html/potato_conf
+      databaseName: potato
+      databaseUsername: spud
+      databasePassword: spudtato
+      databaseHost: potatodb.com
+      databaseDriver: mysql
+      databasePort: 1234
+      databasePrefix: spud_
