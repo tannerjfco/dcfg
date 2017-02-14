@@ -84,7 +84,7 @@ func (c *DrupalConfig) WriteConfig(in *Config) error {
 		return err
 	}
 
-	filepath := ""
+	filepath := "sites/default/"
 	if in.ConfigPath != "" {
 		filepath = in.ConfigPath
 	}
