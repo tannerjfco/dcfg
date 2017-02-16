@@ -67,7 +67,7 @@ func (g *TaskSet) Run() error {
 			fmt.Println(err)
 		}
 
-		// each plugin is registed in the plugins.TypeMap which will use the action string
+		// each plugin is registered in the plugins.TypeMap which will use the action string
 		// as the index in order to get the plugin it is mapped to
 		action := plugins.TypeMap[cmdType.Action]
 		err = json.Unmarshal([]byte(taskString), &action)

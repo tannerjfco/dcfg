@@ -20,7 +20,6 @@ import (
 // DrupalConfig encapsulates all the configurations for a Drupal site.
 type DrupalConfig struct {
 	Core             string
-	SiteURL          string
 	ConfigSyncDir    string
 	DatabaseName     string
 	DatabaseUsername string
@@ -32,6 +31,7 @@ type DrupalConfig struct {
 	HashSalt         string
 	Hostname         string
 	IsDrupal8        bool
+	SiteURL          string
 }
 
 // NewDrupalConfig initializes a DrupalConfig object with defaults

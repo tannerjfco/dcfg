@@ -29,6 +29,9 @@ type Config struct {
 	PrivateFiles     string `yaml:"privateFiles"`
 	ConfigSyncDir    string `yaml:"configSyncDir"`
 	SiteURL          string `yaml:"siteURL"`
+	CorePath         string `yaml:"corePath"`
+	ContentDir       string `yaml:"contentDir"`
+	UploadDir        string `yaml:"uploadDir"`
 }
 
 // Tpl is the interface that each plugin must implement
@@ -40,8 +43,8 @@ type Tpl interface {
 
 // TplMap is used to retrieve the correct plugin
 var TplMap = map[string]Tpl{
-	"drupal": &DrupalConfig{},
-	// "wordpress": &WordpressConfig{},
+	"drupal":    &DrupalConfig{},
+	"wordpress": &WordpressConfig{},
 }
 
 // String prints the Task
