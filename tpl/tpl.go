@@ -29,7 +29,7 @@ type Config struct {
 	PrivateFiles     string `yaml:"privateFiles"`
 	ConfigSyncDir    string `yaml:"configSyncDir"`
 	SiteURL          string `yaml:"siteURL"`
-	CorePath         string `yaml:"corePath"`
+	CoreDir          string `yaml:"coreDir"`
 	ContentDir       string `yaml:"contentDir"`
 	UploadDir        string `yaml:"uploadDir"`
 }

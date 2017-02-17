@@ -15,9 +15,10 @@
   env:
     DEPLOY_URL: $DEPLOY_URL
     DB_NAME: $DB_NAME
+    appType: drupal
   tasks:
     - action: template
-      app: drupal
+      app: '{{.appType}}'
       siteURL: '{{.DEPLOY_URL}}'
       databaseName: '{{.DB_NAME}}'
       ignoreFiles: true

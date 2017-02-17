@@ -64,7 +64,7 @@ func TestDrupalWriteConfig(t *testing.T) {
 
 	// test creating a config that handles a strange files directory
 	args[1] = "weird_file_dir"
-	src := "testing/file_src"
+	src := "file_src"
 	dest := "potato"
 	os.Setenv("FILE_SRC", src)
 	os.MkdirAll(src, 0755)

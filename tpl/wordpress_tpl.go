@@ -7,7 +7,7 @@ const (
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', '{{ $config.DatabaseName');
+define('DB_NAME', '{{ $config.DatabaseName }}');
 
 /** MySQL database username */
 define('DB_USER', '{{ $config.DatabaseUsername }}');
@@ -64,7 +64,7 @@ define('WP_DEBUG', false);
  * address where your WordPress core files reside.
  */
 if ( !defined('WP_SITEURL') ) {
-  define( 'WP_SITEURL', '{{ $config.SiteURL }}/{{ $config.CorePath' );
+  define( 'WP_SITEURL', '{{ $config.SiteURL }}{{ $config.CoreDir }}' );
 }
 
 /**

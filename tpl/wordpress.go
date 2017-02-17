@@ -33,7 +33,7 @@ type WordpressConfig struct {
 	NonceSalt        string
 	Docroot          string
 	SiteURL          string
-	CorePath         string
+	CoreDir          string
 	ContentDir       string
 	UploadDir        string
 }
@@ -42,7 +42,7 @@ type WordpressConfig struct {
 func NewWordpressConfig() *WordpressConfig {
 	return &WordpressConfig{
 		ContentDir:       "wp-content",
-		CorePath:         "",
+		CoreDir:          "",
 		DatabaseName:     "data",
 		DatabaseUsername: "root",
 		DatabasePassword: "root",
@@ -82,7 +82,7 @@ func (c *WordpressConfig) WriteConfig(in *Config) error {
 		conf.UploadDir = conf.ContentDir + "/uploads"
 	}
 
-	// If no salts were provided, generate them.
+	// If there's no salt ask for some.
 	saltKeys := []string{"AuthKey", "SecureAuthKey", "LoggedInKey", "NonceKey", "AuthSalt", "SecureAuthSalt", "LoggedInSalt", "NonceSalt"}
 	for _, key := range saltKeys {
 		val, err := reflections.GetField(conf, key)
@@ -97,7 +97,7 @@ func (c *WordpressConfig) WriteConfig(in *Config) error {
 		}
 	}
 
-	tmpl, err := template.New("conf").Funcs(sprig.TxtFuncMap()).Parse(drupalTemplate)
+	tmpl, err := template.New("conf").Funcs(sprig.TxtFuncMap()).Parse(wordpressTemplate)
 	if err != nil {
 		return err
 	}
