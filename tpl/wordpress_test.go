@@ -9,24 +9,24 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var conf = "wp-config.php"
-var app = "wordpress"
+var wpconf = "wp-config.php"
+var wapp = "wordpress"
 
 func TestWordPressWriteConfig(t *testing.T) {
 	assert := assert.New(t)
 
 	in := new(Config)
-	in.App = app
+	in.App = wapp
 	in.IgnoreFiles = true
 	wp := new(WordpressConfig)
 
 	err := wp.WriteConfig(in)
 	assert.NoError(err)
 
-	content, err := ioutil.ReadFile(conf)
+	content, err := ioutil.ReadFile(wpconf)
 	assert.NoError(err)
 	assert.Contains(string(content), "define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/wp-content' );")
-	os.Remove(conf)
+	os.Remove(wpconf)
 }
 
 func TestWordPressPlaceFiles(t *testing.T) {
@@ -40,7 +40,7 @@ func TestWordPressPlaceFiles(t *testing.T) {
 	os.Create(src + "/testfile")
 
 	in := new(Config)
-	in.App = app
+	in.App = wapp
 	wp := new(WordpressConfig)
 
 	err := wp.PlaceFiles(in, false)
@@ -50,14 +50,14 @@ func TestWordPressPlaceFiles(t *testing.T) {
 	link, err := os.Readlink(dest + "/uploads")
 	assert.NoError(err)
 	assert.Contains(link, "file_src")
-	os.Remove(conf)
+	os.Remove(wpconf)
 	os.Remove(dest)
 
 	err = wp.PlaceFiles(in, true)
 	assert.NoError(err)
 	assert.True(system.FileExists(dest + "/uploads"))
 	assert.True(system.FileExists(dest + "/uploads/testfile"))
-	os.Remove(conf)
+	os.Remove(wpconf)
 	os.RemoveAll(src)
 	os.RemoveAll(dest)
 	os.Unsetenv("FILE_SRC")
@@ -67,7 +67,7 @@ func TestWordPressWebConfig(t *testing.T) {
 	assert := assert.New(t)
 
 	in := new(Config)
-	in.App = app
+	in.App = wapp
 	in.IgnoreFiles = true
 	in.DocRoot = "potato"
 	wp := new(WordpressConfig)
@@ -81,5 +81,5 @@ func TestWordPressWebConfig(t *testing.T) {
 	assert.NoError(err)
 	assert.Contains(string(result), "root /var/www/html/potato;")
 	os.Remove(webConf)
-	os.Remove(conf)
+	os.Remove(wpconf)
 }

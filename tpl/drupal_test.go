@@ -20,121 +20,79 @@ const (
 	}`
 )
 
+var conf = "settings.php"
+var app = "drupal"
+
 func TestDrupalWriteConfig(t *testing.T) {
 	assert := assert.New(t)
-	bin := "dcfg"
-	confFile := "settings.php"
+	path := os.TempDir()
 
-	// test creating a drupal config w/ no parameters set in yaml
-	args := []string{"run", "default", "--config", "testing/drupal.yaml"}
-	out, err := system.RunCommand(bin, args)
-	assert.NoError(err)
-	result, err := ioutil.ReadFile(confFile)
-	assert.NoError(err)
-	assert.Contains(string(out), "this is a drupal app")
-	assert.Contains(string(result), "'database' => \"data\"")
-	err = os.Remove(confFile)
-	assert.Nil(err)
+	in := new(Config)
+	in.App = app
+	in.IgnoreFiles = true
+	in.ConfigPath = path
+	drupal := new(DrupalConfig)
 
-	// test creating a config for drupal 8
-	args[1] = "drupal8"
-	out, err = system.RunCommand(bin, args)
+	err := drupal.WriteConfig(in)
 	assert.NoError(err)
-	assert.Contains(string(out), "Core: \"8.x\",")
-	result, err = ioutil.ReadFile(confFile)
-	assert.NoError(err)
-	assert.Contains(string(result), "$settings['hash_salt'] =")
-	err = os.Remove(confFile)
-	assert.Nil(err)
 
-	// test creating a config that uses env vars that ddev would set
-	args[1] = "ddev_configured"
-	os.Setenv("DEPLOY_URL", "http://www.test.site")
-	os.Setenv("DB_NAME", "db")
-	_, err = system.RunCommand(bin, args)
+	content, err := ioutil.ReadFile(path + conf)
 	assert.NoError(err)
-	result, err = ioutil.ReadFile(confFile)
-	assert.NoError(err)
-	assert.Contains(string(result), "$base_url = 'http://www.test.site';")
-	assert.Contains(string(result), "'database' => \"db\"")
-	os.Unsetenv("DEPLOY_URL")
-	os.Unsetenv("DB_NAME")
-	err = os.Remove(confFile)
-	assert.Nil(err)
+	assert.Contains(string(content), "'database' => \"data\"")
+	os.Remove(conf)
+}
 
-	// test creating a config that handles a strange files directory
-	args[1] = "weird_file_dir"
-	src := "file_src"
-	dest := "potato"
+func TestDrupalPlaceFiles(t *testing.T) {
+	assert := assert.New(t)
+
+	src := os.TempDir() + "file_src"
+	dest := "sites/default"
 	os.Setenv("FILE_SRC", src)
+	os.MkdirAll(dest, 0755)
 	os.MkdirAll(src, 0755)
 	os.Create(src + "/testfile")
-	_, err = system.RunCommand(bin, args)
+
+	in := new(Config)
+	in.App = app
+	drupal := new(DrupalConfig)
+
+	err := drupal.PlaceFiles(in, false)
 	assert.NoError(err)
-	assert.True(system.FileExists(dest))
-	assert.True(system.FileExists(dest + "/testfile"))
-	// validate the symlink
-	link, err := os.Readlink(dest)
+	assert.True(system.FileExists(dest + "/files"))
+	assert.True(system.FileExists(dest + "/files/testfile"))
+	link, err := os.Readlink(dest + "/files")
 	assert.NoError(err)
-	assert.Contains(link, "testing/file_src")
-	// reset to test as dir we rsync to
-	os.Remove(confFile)
+	assert.Contains(link, "file_src")
+	os.Remove(conf)
 	os.Remove(dest)
-	os.Setenv("DEPLOY_NAME", "local")
-	_, err = system.RunCommand(bin, args)
+
+	err = drupal.PlaceFiles(in, true)
 	assert.NoError(err)
-	assert.True(system.FileExists(dest))
-	assert.True(system.FileExists(dest + "/testfile"))
-	// cleanup
-	os.Remove(confFile)
-	os.Unsetenv("FILE_SRC")
-	os.Unsetenv("DEPLOY_NAME")
+	assert.True(system.FileExists(dest + "/files"))
+	assert.True(system.FileExists(dest + "/files/testfile"))
+	os.Remove(conf)
 	os.RemoveAll(src)
 	os.RemoveAll(dest)
+	os.Unsetenv("FILE_SRC")
+}
 
-	// test configuring a site contained in a folder called docroot
-	args[1] = "have_docroot"
+func TestDrupalWebConfig(t *testing.T) {
+	assert := assert.New(t)
+
+	in := new(Config)
+	in.App = app
+	in.IgnoreFiles = true
+	in.DocRoot = "potato"
+	drupal := new(DrupalConfig)
 	webConf := "test.conf"
 	ioutil.WriteFile(webConf, []byte(testConf), os.FileMode(0644))
 	os.Setenv("NGINX_SITE_CONF", webConf)
-	_, err = system.RunCommand(bin, args)
-	assert.NoError(err)
-	result, err = ioutil.ReadFile(webConf)
-	assert.NoError(err)
-	assert.Contains(string(result), "root /var/www/html/docroot;")
-	os.Remove(webConf)
 
-	// test a drupal app definition with all options set
-	args[1] = "all_the_things"
-	os.Setenv("FILE_SRC", src)
-	os.MkdirAll(src, 0755)
-	os.Create(src + "/testfile")
-	ioutil.WriteFile(webConf, []byte(testConf), os.FileMode(0644))
-	_, err = system.RunCommand(bin, args)
+	err := drupal.WebConfig(in)
 	assert.NoError(err)
-	// check web config
-	webResult, err := ioutil.ReadFile(webConf)
+	result, err := ioutil.ReadFile(webConf)
 	assert.NoError(err)
-	assert.Contains(string(webResult), "root /var/www/html/potato;")
-	// check file dir
-	fileDest := "potato_pub"
-	assert.True(system.FileExists(fileDest))
-	assert.True(system.FileExists(fileDest + "/testfile"))
-	// check settings.php contents
-	result, err = ioutil.ReadFile(confFile)
-	assert.NoError(err)
-	assert.Contains(string(result), "CONFIG_SYNC_DIRECTORY => '/var/www/html/potato_conf',")
-	assert.Contains(string(result), "'database' => \"potato\"")
-	assert.Contains(string(result), "'username' => \"spud\"")
-	assert.Contains(string(result), "'password' => \"spudtato\"")
-	assert.Contains(string(result), "'host' => \"potatodb.com\"")
-	assert.Contains(string(result), "'driver' => \"mysql\"")
-	assert.Contains(string(result), "'port' => 1234")
-	assert.Contains(string(result), "'prefix' => \"spud_\"")
-	// cleanup
+	assert.Contains(string(result), "root /var/www/html/potato;")
 	os.Remove(webConf)
-	os.Remove(confFile)
-	os.RemoveAll(src)
-	os.RemoveAll(fileDest)
-	os.Unsetenv("FILE_SRC")
+	os.Remove(conf)
 }
