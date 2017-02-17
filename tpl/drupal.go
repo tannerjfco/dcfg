@@ -86,7 +86,7 @@ func (c *DrupalConfig) WriteConfig(in *Config) error {
 
 	filepath := "sites/default/"
 	if in.ConfigPath != "" {
-		filepath = in.ConfigPath
+		filepath = SlashIt(in.ConfigPath, true)
 	}
 
 	file, err := os.Create(filepath + "settings.php")

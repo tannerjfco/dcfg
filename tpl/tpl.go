@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"log"
+	"strings"
 
 	"os"
 
@@ -85,4 +86,14 @@ func PassTheSalt() string {
 	salt.Write([]byte(random))
 
 	return hex.EncodeToString(salt.Sum(nil))
+}
+
+// SlashIt ensures you have a preceding or trailing slash on a string
+func SlashIt(val string, trailing bool) string {
+	if trailing && !strings.HasSuffix(val, "/") {
+		return val + "/"
+	} else if !trailing && !strings.HasPrefix(val, "/") {
+		return "/" + val
+	}
+	return val
 }

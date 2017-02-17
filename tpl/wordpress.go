@@ -78,6 +78,10 @@ func (c *WordpressConfig) WriteConfig(in *Config) error {
 		}
 	}
 
+	if conf.CoreDir != "" {
+		conf.CoreDir = SlashIt(in.CoreDir, false)
+	}
+
 	if in.UploadDir == "" {
 		conf.UploadDir = conf.ContentDir + "/uploads"
 	}
@@ -104,7 +108,7 @@ func (c *WordpressConfig) WriteConfig(in *Config) error {
 
 	filepath := ""
 	if in.ConfigPath != "" {
-		filepath = in.ConfigPath
+		filepath = SlashIt(in.ConfigPath, true)
 	}
 
 	file, err := os.Create(filepath + "wp-config.php")
