@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/drud/dcfg/pkg/dcfg"
+	"github.com/drud/dcfg/dcfglib"
 	"github.com/spf13/cobra"
 )
 
@@ -45,7 +45,7 @@ var runCmd = &cobra.Command{
 			log.Fatalln("Could not read config file:", err)
 		}
 
-		groups, err := dcfg.GetTaskSetList(fileBytes)
+		groups, err := dcfglib.GetTaskSetList(fileBytes)
 		if err != nil {
 			log.Fatalln(err)
 		}

@@ -1,6 +1,6 @@
-// Package dcfg groups.go - The TaskSet and TaskSetList types represent the blocks of commands
+// Package dcfglib groups.go - The TaskSet and TaskSetList types represent the blocks of commands
 // contained in your drud.yaml(e.g. the install and uninstall examples from the readne).
-package dcfg
+package dcfglib
 
 import (
 	"bytes"

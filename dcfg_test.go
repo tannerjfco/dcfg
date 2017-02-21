@@ -62,12 +62,10 @@ func TestRunOptions(t *testing.T) {
 	cmdCFG := `
 - name: create
   tasks:
-  - action: command
-    cmd: touch testdcfg.txt
+  - cmd: touch testdcfg.txt
 - name: delete
   tasks:
-  - action: command
-    cmd: rm testdcfg.txt
+  - cmd: rm testdcfg.txt
     `
 
 	tmpFile := getTempFile(cmdCFG)

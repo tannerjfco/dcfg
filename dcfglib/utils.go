@@ -1,4 +1,4 @@
-package dcfg
+package dcfglib
 
 import (
 	"encoding/json"
