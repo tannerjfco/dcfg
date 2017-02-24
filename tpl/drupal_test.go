@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"os"
+	"path"
 
 	"io/ioutil"
 
@@ -25,18 +26,18 @@ var app = "drupal"
 
 func TestDrupalWriteAppConfig(t *testing.T) {
 	assert := assert.New(t)
-	path := os.TempDir()
+	filepath := os.TempDir()
 
 	in := new(Config)
 	in.App = app
 	in.IgnoreFiles = true
-	in.ConfigPath = path
+	in.ConfigPath = filepath
 	drupal := new(DrupalConfig)
 
 	err := drupal.WriteAppConfig(in)
 	assert.NoError(err)
 
-	content, err := ioutil.ReadFile(path + conf)
+	content, err := ioutil.ReadFile(path.Join(filepath, conf))
 	assert.NoError(err)
 	assert.Contains(string(content), "'database' => \"data\"")
 	os.Remove(conf)
@@ -46,11 +47,11 @@ func TestDrupalPlaceFiles(t *testing.T) {
 	assert := assert.New(t)
 
 	src := os.TempDir() + "file_src"
-	dest := "sites/default"
+	dest := path.Join("sites", "default")
 	os.Setenv("FILE_SRC", src)
 	os.MkdirAll(dest, 0755)
 	os.MkdirAll(src, 0755)
-	os.Create(src + "/testfile")
+	os.Create(path.Join(src, "testfile"))
 
 	in := new(Config)
 	in.App = app
@@ -58,9 +59,9 @@ func TestDrupalPlaceFiles(t *testing.T) {
 
 	err := drupal.PlaceFiles(in, false)
 	assert.NoError(err)
-	assert.True(system.FileExists(dest + "/files"))
-	assert.True(system.FileExists(dest + "/files/testfile"))
-	link, err := os.Readlink(dest + "/files")
+	assert.True(system.FileExists(path.Join(dest, "files")))
+	assert.True(system.FileExists(path.Join(dest, "files", "testfile")))
+	link, err := os.Readlink(path.Join(dest, "files"))
 	assert.NoError(err)
 	assert.Contains(link, "file_src")
 	os.Remove(conf)
@@ -68,8 +69,8 @@ func TestDrupalPlaceFiles(t *testing.T) {
 
 	err = drupal.PlaceFiles(in, true)
 	assert.NoError(err)
-	assert.True(system.FileExists(dest + "/files"))
-	assert.True(system.FileExists(dest + "/files/testfile"))
+	assert.True(system.FileExists(path.Join(dest, "files")))
+	assert.True(system.FileExists(path.Join(dest, "files", "testfile")))
 	os.Remove(conf)
 	os.RemoveAll(src)
 	os.RemoveAll(dest)

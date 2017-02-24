@@ -3,6 +3,7 @@ package tpl
 import (
 	"io/ioutil"
 	"os"
+	"path"
 	"testing"
 
 	"github.com/drud/drud-go/utils/system"
@@ -32,12 +33,12 @@ func TestWordPressWriteAppConfig(t *testing.T) {
 func TestWordPressPlaceFiles(t *testing.T) {
 	assert := assert.New(t)
 
-	src := os.TempDir() + "file_src"
+	src := path.Join(os.TempDir(), "file_src")
 	dest := "wp-content"
 	os.Setenv("FILE_SRC", src)
 	os.Mkdir(dest, 0755)
 	os.MkdirAll(src, 0755)
-	os.Create(src + "/testfile")
+	os.Create(path.Join(src, "testfile"))
 
 	in := new(Config)
 	in.App = wapp
@@ -45,9 +46,9 @@ func TestWordPressPlaceFiles(t *testing.T) {
 
 	err := wp.PlaceFiles(in, false)
 	assert.NoError(err)
-	assert.True(system.FileExists(dest + "/uploads"))
-	assert.True(system.FileExists(dest + "/uploads/testfile"))
-	link, err := os.Readlink(dest + "/uploads")
+	assert.True(system.FileExists(path.Join(dest, "uploads")))
+	assert.True(system.FileExists(path.Join(dest, "uploads", "testfile")))
+	link, err := os.Readlink(path.Join(dest, "uploads"))
 	assert.NoError(err)
 	assert.Contains(link, "file_src")
 	os.Remove(wpconf)
@@ -55,8 +56,8 @@ func TestWordPressPlaceFiles(t *testing.T) {
 
 	err = wp.PlaceFiles(in, true)
 	assert.NoError(err)
-	assert.True(system.FileExists(dest + "/uploads"))
-	assert.True(system.FileExists(dest + "/uploads/testfile"))
+	assert.True(system.FileExists(path.Join(dest, "uploads")))
+	assert.True(system.FileExists(path.Join(dest, "uploads", "testfile")))
 	os.Remove(wpconf)
 	os.RemoveAll(src)
 	os.RemoveAll(dest)

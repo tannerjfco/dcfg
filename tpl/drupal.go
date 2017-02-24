@@ -34,8 +34,8 @@ type DrupalConfig struct {
 	SiteURL          string
 }
 
-// NewDrupalConfig initializes a DrupalConfig object with defaults
-func NewDrupalConfig() *DrupalConfig {
+// DefaultDrupalConfig initializes a DrupalConfig object with defaults
+func DefaultDrupalConfig() *DrupalConfig {
 	return &DrupalConfig{
 		Core:             "7.x",
 		ConfigSyncDir:    "/var/www/html/sync",
@@ -53,7 +53,7 @@ func NewDrupalConfig() *DrupalConfig {
 
 // WriteAppConfig produces a valid settings.php file from the defined configurations
 func (c *DrupalConfig) WriteAppConfig(in *Config) error {
-	c = NewDrupalConfig()
+	c = DefaultDrupalConfig()
 
 	if in.Core == "8.x" {
 		c.IsDrupal8 = true

@@ -38,8 +38,8 @@ type WordpressConfig struct {
 	UploadDir        string
 }
 
-// NewWordpressConfig produces a WordpressConfig object with defaults.
-func NewWordpressConfig() *WordpressConfig {
+// DefaultWordpressConfig produces a WordpressConfig object with defaults.
+func DefaultWordpressConfig() *WordpressConfig {
 	return &WordpressConfig{
 		ContentDir:       "wp-content",
 		CoreDir:          "",
@@ -56,7 +56,7 @@ func NewWordpressConfig() *WordpressConfig {
 
 // WriteAppConfig produces a valid settings.php file from the defined configurations
 func (c *WordpressConfig) WriteAppConfig(in *Config) error {
-	c = NewWordpressConfig()
+	c = DefaultWordpressConfig()
 
 	srcFieldList, err := reflections.Items(in)
 	if err != nil {
