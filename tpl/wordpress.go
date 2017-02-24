@@ -54,9 +54,9 @@ func NewWordpressConfig() *WordpressConfig {
 	}
 }
 
-// WriteConfig produces a valid settings.php file from the defined configurations
-func (c *WordpressConfig) WriteConfig(in *Config) error {
-	conf := NewWordpressConfig()
+// WriteAppConfig produces a valid settings.php file from the defined configurations
+func (c *WordpressConfig) WriteAppConfig(in *Config) error {
+	c = NewWordpressConfig()
 
 	srcFieldList, err := reflections.Items(in)
 	if err != nil {
@@ -65,12 +65,12 @@ func (c *WordpressConfig) WriteConfig(in *Config) error {
 
 	for field, val := range srcFieldList {
 		if val != "" {
-			has, err := reflections.HasField(conf, field)
+			has, err := reflections.HasField(c, field)
 			if err != nil {
 				return err
 			}
 			if has && val != 0 {
-				err = reflections.SetField(conf, field, val)
+				err = reflections.SetField(c, field, val)
 				if err != nil {
 					return err
 				}
@@ -78,23 +78,23 @@ func (c *WordpressConfig) WriteConfig(in *Config) error {
 		}
 	}
 
-	if conf.CoreDir != "" {
-		conf.CoreDir = SlashIt(in.CoreDir, false)
+	if c.CoreDir != "" {
+		c.CoreDir = SlashIt(in.CoreDir, false)
 	}
 
 	if in.UploadDir == "" {
-		conf.UploadDir = conf.ContentDir + "/uploads"
+		c.UploadDir = c.ContentDir + "/uploads"
 	}
 
 	// If there's no salt ask for some.
 	saltKeys := []string{"AuthKey", "SecureAuthKey", "LoggedInKey", "NonceKey", "AuthSalt", "SecureAuthSalt", "LoggedInSalt", "NonceSalt"}
 	for _, key := range saltKeys {
-		val, err := reflections.GetField(conf, key)
+		val, err := reflections.GetField(c, key)
 		if err != nil {
 			return err
 		}
 		if val == "" {
-			err = reflections.SetField(conf, key, PassTheSalt())
+			err = reflections.SetField(c, key, PassTheSalt())
 			if err != nil {
 				return err
 			}
@@ -116,7 +116,7 @@ func (c *WordpressConfig) WriteConfig(in *Config) error {
 		return err
 	}
 
-	err = tmpl.Execute(file, conf)
+	err = tmpl.Execute(file, c)
 	if err != nil {
 		return err
 	}
@@ -169,9 +169,9 @@ func (c *WordpressConfig) PlaceFiles(in *Config, move bool) error {
 	return nil
 }
 
-// WebConfig updates the web server configuration to support the provided app configurations
+// WriteWebConfig updates the web server configuration to support the provided app configurations
 // @TODO: need to update rules for other WP concerns, holding off until more firm on approach for this task.
-func (c *WordpressConfig) WebConfig(in *Config) error {
+func (c *WordpressConfig) WriteWebConfig(in *Config) error {
 	dest := os.Getenv("NGINX_SITE_CONF")
 	root := "root /var/www/html"
 

@@ -23,7 +23,7 @@ const (
 var conf = "settings.php"
 var app = "drupal"
 
-func TestDrupalWriteConfig(t *testing.T) {
+func TestDrupalWriteAppConfig(t *testing.T) {
 	assert := assert.New(t)
 	path := os.TempDir()
 
@@ -33,7 +33,7 @@ func TestDrupalWriteConfig(t *testing.T) {
 	in.ConfigPath = path
 	drupal := new(DrupalConfig)
 
-	err := drupal.WriteConfig(in)
+	err := drupal.WriteAppConfig(in)
 	assert.NoError(err)
 
 	content, err := ioutil.ReadFile(path + conf)
@@ -88,7 +88,7 @@ func TestDrupalWebConfig(t *testing.T) {
 	ioutil.WriteFile(webConf, []byte(testConf), os.FileMode(0644))
 	os.Setenv("NGINX_SITE_CONF", webConf)
 
-	err := drupal.WebConfig(in)
+	err := drupal.WriteWebConfig(in)
 	assert.NoError(err)
 	result, err := ioutil.ReadFile(webConf)
 	assert.NoError(err)

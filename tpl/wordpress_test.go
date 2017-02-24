@@ -12,7 +12,7 @@ import (
 var wpconf = "wp-config.php"
 var wapp = "wordpress"
 
-func TestWordPressWriteConfig(t *testing.T) {
+func TestWordPressWriteAppConfig(t *testing.T) {
 	assert := assert.New(t)
 
 	in := new(Config)
@@ -20,7 +20,7 @@ func TestWordPressWriteConfig(t *testing.T) {
 	in.IgnoreFiles = true
 	wp := new(WordpressConfig)
 
-	err := wp.WriteConfig(in)
+	err := wp.WriteAppConfig(in)
 	assert.NoError(err)
 
 	content, err := ioutil.ReadFile(wpconf)
@@ -75,7 +75,7 @@ func TestWordPressWebConfig(t *testing.T) {
 	ioutil.WriteFile(webConf, []byte(testConf), os.FileMode(0644))
 	os.Setenv("NGINX_SITE_CONF", webConf)
 
-	err := wp.WebConfig(in)
+	err := wp.WriteWebConfig(in)
 	assert.NoError(err)
 	result, err := ioutil.ReadFile(webConf)
 	assert.NoError(err)

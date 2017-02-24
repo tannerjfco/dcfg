@@ -10,9 +10,9 @@ import (
 
 // Tpl is the interface that each plugin must implement
 type Tpl interface {
-	WriteConfig(in *Config) error
+	WriteAppConfig(in *Config) error
 	PlaceFiles(in *Config, move bool) error
-	WebConfig(in *Config) error
+	WriteWebConfig(in *Config) error
 }
 
 // TplMap is used to retrieve the correct plugin

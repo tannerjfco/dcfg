@@ -41,7 +41,7 @@ func (c *Config) Run() error {
 
 	app := TplMap[c.App]
 
-	err := app.WriteConfig(c)
+	err := app.WriteAppConfig(c)
 	if err != nil {
 		return err
 	}
@@ -55,7 +55,7 @@ func (c *Config) Run() error {
 	}
 
 	if c.DocRoot != "" {
-		app.WebConfig(c)
+		app.WriteWebConfig(c)
 	}
 
 	return nil

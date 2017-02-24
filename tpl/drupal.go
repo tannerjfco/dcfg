@@ -51,12 +51,12 @@ func NewDrupalConfig() *DrupalConfig {
 	}
 }
 
-// WriteConfig produces a valid settings.php file from the defined configurations
-func (c *DrupalConfig) WriteConfig(in *Config) error {
-	conf := NewDrupalConfig()
+// WriteAppConfig produces a valid settings.php file from the defined configurations
+func (c *DrupalConfig) WriteAppConfig(in *Config) error {
+	c = NewDrupalConfig()
 
 	if in.Core == "8.x" {
-		conf.IsDrupal8 = true
+		c.IsDrupal8 = true
 	}
 
 	srcFieldList, err := reflections.Items(in)
@@ -66,12 +66,12 @@ func (c *DrupalConfig) WriteConfig(in *Config) error {
 
 	for field, val := range srcFieldList {
 		if val != "" {
-			has, err := reflections.HasField(conf, field)
+			has, err := reflections.HasField(c, field)
 			if err != nil {
 				return err
 			}
 			if has && val != 0 {
-				err = reflections.SetField(conf, field, val)
+				err = reflections.SetField(c, field, val)
 				if err != nil {
 					return err
 				}
@@ -94,7 +94,7 @@ func (c *DrupalConfig) WriteConfig(in *Config) error {
 		return err
 	}
 
-	err = tmpl.Execute(file, conf)
+	err = tmpl.Execute(file, c)
 	if err != nil {
 		return err
 	}
@@ -140,9 +140,9 @@ func (c *DrupalConfig) PlaceFiles(in *Config, move bool) error {
 	return nil
 }
 
-// WebConfig updates the web server configuration to support the provided app configurations
+// WriteWebConfig updates the web server configuration to support the provided app configurations
 // @TODO: need to update rules for public/private files, holding off until more firm on approach for this task.
-func (c *DrupalConfig) WebConfig(in *Config) error {
+func (c *DrupalConfig) WriteWebConfig(in *Config) error {
 	dest := os.Getenv("NGINX_SITE_CONF")
 	root := "root /var/www/html"
 
