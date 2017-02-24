@@ -37,7 +37,9 @@ func (c Config) String() string {
 
 // Run creates configurations for an application
 func (c *Config) Run() error {
-	log.Printf("this is a %s app", c.App)
+	if !isValidApp(c.App) {
+		log.Fatalf("'%s' is not a valid app type", c.App)
+	}
 
 	app := TplMap[c.App]
 

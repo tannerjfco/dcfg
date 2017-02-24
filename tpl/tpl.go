@@ -21,6 +21,16 @@ var TplMap = map[string]Tpl{
 	"wordpress": &WordpressConfig{},
 }
 
+// isValidApp determines if a given app matches one of the defined plugins.
+func isValidApp(app string) bool {
+	for valApp := range TplMap {
+		if app == valApp {
+			return true
+		}
+	}
+	return false
+}
+
 // PassTheSalt generates a hash salt
 func PassTheSalt() string {
 	salt := sha256.New()
