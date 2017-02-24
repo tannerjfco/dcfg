@@ -19,7 +19,7 @@ func TestWordPressWriteAppConfig(t *testing.T) {
 	in := new(Config)
 	in.App = wapp
 	in.IgnoreFiles = true
-	wp := new(WordpressConfig)
+	wp := DefaultWordpressConfig()
 
 	err := wp.WriteAppConfig(in)
 	assert.NoError(err)
@@ -42,9 +42,11 @@ func TestWordPressPlaceFiles(t *testing.T) {
 
 	in := new(Config)
 	in.App = wapp
-	wp := new(WordpressConfig)
+	wp := DefaultWordpressConfig()
+	wp.WriteAppConfig(in)
+	os.Remove(wpconf)
 
-	err := wp.PlaceFiles(in, false)
+	err := wp.PlaceFiles(false)
 	assert.NoError(err)
 	assert.True(system.FileExists(path.Join(dest, "uploads")))
 	assert.True(system.FileExists(path.Join(dest, "uploads", "testfile")))
@@ -54,7 +56,7 @@ func TestWordPressPlaceFiles(t *testing.T) {
 	os.Remove(wpconf)
 	os.Remove(dest)
 
-	err = wp.PlaceFiles(in, true)
+	err = wp.PlaceFiles(true)
 	assert.NoError(err)
 	assert.True(system.FileExists(path.Join(dest, "uploads")))
 	assert.True(system.FileExists(path.Join(dest, "uploads", "testfile")))
@@ -70,13 +72,15 @@ func TestWordPressWebConfig(t *testing.T) {
 	in := new(Config)
 	in.App = wapp
 	in.IgnoreFiles = true
-	in.DocRoot = "potato"
-	wp := new(WordpressConfig)
+	in.Docroot = "potato"
+	wp := DefaultWordpressConfig()
+	wp.WriteAppConfig(in)
+	os.Remove(wpconf)
 	webConf := "test.conf"
 	ioutil.WriteFile(webConf, []byte(testConf), os.FileMode(0644))
 	os.Setenv("NGINX_SITE_CONF", webConf)
 
-	err := wp.WriteWebConfig(in)
+	err := wp.WriteWebConfig()
 	assert.NoError(err)
 	result, err := ioutil.ReadFile(webConf)
 	assert.NoError(err)

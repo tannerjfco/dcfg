@@ -66,4 +66,4 @@ These attributes are available for WordPress apps:
     Default: `wp-content`
 - `uploadDir`: Define the upload directory.
     Allowed Value: string
-    Default: `uploads`
+    Default: `wp-content/uploads`

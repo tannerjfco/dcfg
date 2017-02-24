@@ -32,7 +32,7 @@ func TestDrupalWriteAppConfig(t *testing.T) {
 	in.App = app
 	in.IgnoreFiles = true
 	in.ConfigPath = filepath
-	drupal := new(DrupalConfig)
+	drupal := DefaultDrupalConfig()
 
 	err := drupal.WriteAppConfig(in)
 	assert.NoError(err)
@@ -55,9 +55,9 @@ func TestDrupalPlaceFiles(t *testing.T) {
 
 	in := new(Config)
 	in.App = app
-	drupal := new(DrupalConfig)
+	drupal := DefaultDrupalConfig()
 
-	err := drupal.PlaceFiles(in, false)
+	err := drupal.PlaceFiles(false)
 	assert.NoError(err)
 	assert.True(system.FileExists(path.Join(dest, "files")))
 	assert.True(system.FileExists(path.Join(dest, "files", "testfile")))
@@ -67,7 +67,7 @@ func TestDrupalPlaceFiles(t *testing.T) {
 	os.Remove(conf)
 	os.Remove(dest)
 
-	err = drupal.PlaceFiles(in, true)
+	err = drupal.PlaceFiles(true)
 	assert.NoError(err)
 	assert.True(system.FileExists(path.Join(dest, "files")))
 	assert.True(system.FileExists(path.Join(dest, "files", "testfile")))
@@ -79,17 +79,21 @@ func TestDrupalPlaceFiles(t *testing.T) {
 
 func TestDrupalWebConfig(t *testing.T) {
 	assert := assert.New(t)
+	filepath := os.TempDir()
 
 	in := new(Config)
 	in.App = app
 	in.IgnoreFiles = true
-	in.DocRoot = "potato"
-	drupal := new(DrupalConfig)
+	in.Docroot = "potato"
+	in.ConfigPath = filepath
+	drupal := DefaultDrupalConfig()
+	drupal.WriteAppConfig(in)
+	os.Remove(path.Join(filepath, conf))
 	webConf := "test.conf"
 	ioutil.WriteFile(webConf, []byte(testConf), os.FileMode(0644))
 	os.Setenv("NGINX_SITE_CONF", webConf)
 
-	err := drupal.WriteWebConfig(in)
+	err := drupal.WriteWebConfig()
 	assert.NoError(err)
 	result, err := ioutil.ReadFile(webConf)
 	assert.NoError(err)

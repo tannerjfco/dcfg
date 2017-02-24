@@ -11,14 +11,14 @@ import (
 // Tpl is the interface that each plugin must implement
 type Tpl interface {
 	WriteAppConfig(in *Config) error
-	PlaceFiles(in *Config, move bool) error
-	WriteWebConfig(in *Config) error
+	PlaceFiles(move bool) error
+	WriteWebConfig() error
 }
 
 // TplMap is used to retrieve the correct plugin
 var TplMap = map[string]Tpl{
-	"drupal":    &DrupalConfig{},
-	"wordpress": &WordpressConfig{},
+	"drupal":    DefaultDrupalConfig(),
+	"wordpress": DefaultWordpressConfig(),
 }
 
 // isValidApp determines if a given app matches one of the defined plugins.

@@ -28,9 +28,12 @@ type DrupalConfig struct {
 	DatabaseDriver   string
 	DatabasePort     int
 	DatabasePrefix   string
+	Docroot          string
+	FileSrc          string
 	HashSalt         string
 	Hostname         string
 	IsDrupal8        bool
+	PublicFiles      string
 	SiteURL          string
 }
 
@@ -48,13 +51,13 @@ func DefaultDrupalConfig() *DrupalConfig {
 		DatabasePrefix:   "",
 		HashSalt:         PassTheSalt(),
 		IsDrupal8:        false,
+		PublicFiles:      "sites/default/files",
+		FileSrc:          os.Getenv("FILE_SRC"),
 	}
 }
 
 // WriteAppConfig produces a valid settings.php file from the defined configurations
 func (c *DrupalConfig) WriteAppConfig(in *Config) error {
-	c = DefaultDrupalConfig()
-
 	if in.Core == "8.x" {
 		c.IsDrupal8 = true
 	}
@@ -79,7 +82,7 @@ func (c *DrupalConfig) WriteAppConfig(in *Config) error {
 		}
 	}
 
-	tmpl, err := template.New("conf").Funcs(sprig.TxtFuncMap()).Parse(drupalTemplate)
+	tmpl, err := template.New("c").Funcs(sprig.TxtFuncMap()).Parse(drupalTemplate)
 	if err != nil {
 		return err
 	}
@@ -103,14 +106,11 @@ func (c *DrupalConfig) WriteAppConfig(in *Config) error {
 }
 
 // PlaceFiles determines where file upload directories should go.
-func (c *DrupalConfig) PlaceFiles(in *Config, move bool) error {
-	src := os.Getenv("FILE_SRC")
-	dest := "sites/default/files"
-	if in.PublicFiles != "" {
-		dest = in.PublicFiles
-	}
+func (c *DrupalConfig) PlaceFiles(move bool) error {
+	src := c.FileSrc
+	dest := c.PublicFiles
 
-	if src == "" || !system.FileExists(src) {
+	if !system.FileExists(src) {
 		log.Fatalf("source path for files does not exist")
 	}
 
@@ -142,7 +142,7 @@ func (c *DrupalConfig) PlaceFiles(in *Config, move bool) error {
 
 // WriteWebConfig updates the web server configuration to support the provided app configurations
 // @TODO: need to update rules for public/private files, holding off until more firm on approach for this task.
-func (c *DrupalConfig) WriteWebConfig(in *Config) error {
+func (c *DrupalConfig) WriteWebConfig() error {
 	dest := os.Getenv("NGINX_SITE_CONF")
 	root := "root /var/www/html"
 
@@ -156,7 +156,7 @@ func (c *DrupalConfig) WriteWebConfig(in *Config) error {
 	}
 
 	re := regexp.MustCompile(root)
-	new := re.ReplaceAllString(string(conf), root+"/"+in.DocRoot)
+	new := re.ReplaceAllString(string(conf), root+"/"+c.Docroot)
 
 	err = ioutil.WriteFile(dest, []byte(new), 0644)
 	if err != nil {

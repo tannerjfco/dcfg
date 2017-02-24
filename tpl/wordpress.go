@@ -36,6 +36,7 @@ type WordpressConfig struct {
 	CoreDir          string
 	ContentDir       string
 	UploadDir        string
+	FileSrc          string
 }
 
 // DefaultWordpressConfig produces a WordpressConfig object with defaults.
@@ -51,13 +52,12 @@ func DefaultWordpressConfig() *WordpressConfig {
 		DatabasePort:     3306,
 		DatabasePrefix:   "wp_",
 		SiteURL:          os.Getenv("DEPLOY_URL"),
+		FileSrc:          os.Getenv("FILE_SRC"),
 	}
 }
 
 // WriteAppConfig produces a valid settings.php file from the defined configurations
 func (c *WordpressConfig) WriteAppConfig(in *Config) error {
-	c = DefaultWordpressConfig()
-
 	srcFieldList, err := reflections.Items(in)
 	if err != nil {
 		return err
@@ -125,21 +125,11 @@ func (c *WordpressConfig) WriteAppConfig(in *Config) error {
 }
 
 // PlaceFiles determines where file upload directories should go.
-func (c *WordpressConfig) PlaceFiles(in *Config, move bool) error {
-	src := os.Getenv("FILE_SRC")
-	dest := "wp-content/uploads"
-	if in.ContentDir != "" || in.UploadDir != "" {
-		// content dir is not set, assume wp-content
-		if in.ContentDir == "" {
-			dest = "wp-content/" + in.UploadDir
-		}
-		// upload dir is not set, assume uploads
-		if in.UploadDir == "" {
-			dest = in.ContentDir + "/uploads"
-		}
-	}
+func (c *WordpressConfig) PlaceFiles(move bool) error {
+	src := c.FileSrc
+	dest := c.UploadDir
 
-	if src == "" || !system.FileExists(src) {
+	if !system.FileExists(src) {
 		log.Fatalf("source path for files does not exist")
 	}
 
@@ -171,7 +161,7 @@ func (c *WordpressConfig) PlaceFiles(in *Config, move bool) error {
 
 // WriteWebConfig updates the web server configuration to support the provided app configurations
 // @TODO: need to update rules for other WP concerns, holding off until more firm on approach for this task.
-func (c *WordpressConfig) WriteWebConfig(in *Config) error {
+func (c *WordpressConfig) WriteWebConfig() error {
 	dest := os.Getenv("NGINX_SITE_CONF")
 	root := "root /var/www/html"
 
@@ -185,7 +175,7 @@ func (c *WordpressConfig) WriteWebConfig(in *Config) error {
 	}
 
 	re := regexp.MustCompile(root)
-	new := re.ReplaceAllString(string(conf), root+"/"+in.DocRoot)
+	new := re.ReplaceAllString(string(conf), root+"/"+c.Docroot)
 
 	err = ioutil.WriteFile(dest, []byte(new), 0644)
 	if err != nil {

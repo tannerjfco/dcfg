@@ -12,7 +12,7 @@ type Config struct {
 	App              string `yaml:"app"`
 	Core             string `yaml:"core"`
 	ConfigPath       string `yaml:"configPath"`
-	DocRoot          string `yaml:"docroot"`
+	Docroot          string `yaml:"docroot"`
 	DatabaseName     string `yaml:"databaseName"`
 	DatabaseUsername string `yaml:"databaseUsername"`
 	DatabasePassword string `yaml:"databasePassword"`
@@ -28,6 +28,7 @@ type Config struct {
 	CoreDir          string `yaml:"coreDir"`
 	ContentDir       string `yaml:"contentDir"`
 	UploadDir        string `yaml:"uploadDir"`
+	FileSrc          string `yaml:"fileSrc"`
 }
 
 // String prints the Task
@@ -50,14 +51,14 @@ func (c *Config) Run() error {
 
 	if !c.IgnoreFiles {
 		if os.Getenv("DEPLOY_NAME") == "local" {
-			app.PlaceFiles(c, true)
+			app.PlaceFiles(true)
 		} else {
-			app.PlaceFiles(c, false)
+			app.PlaceFiles(false)
 		}
 	}
 
-	if c.DocRoot != "" {
-		app.WriteWebConfig(c)
+	if c.Docroot != "" {
+		app.WriteWebConfig()
 	}
 
 	return nil
